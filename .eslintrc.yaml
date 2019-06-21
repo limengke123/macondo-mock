@@ -1,0 +1,24 @@
+root: true
+env:
+  node: true
+  es6: true
+parser: "@typescript-eslint/parser"
+parserOptions:
+  project: ./tsconfig.json
+  ecmaVersion: 6
+  sourceType: module
+plugins:
+  - typescript
+rules:
+  indent:
+    - 2
+    - 4
+  semi:
+    - 2
+    - never
+    - beforeStatementContinuationChars: always
+  quotes:
+    - 2
+    - single
+  no-var:
+    - 2
