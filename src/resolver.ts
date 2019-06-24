@@ -2,40 +2,40 @@ const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
 const rightBrace: RegExp = /.*}.*/g
 const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
 const arrReg: RegExp = /array\[(\w+)]$/g
+
+const RESULT = 'Result'
+
 export class Resolver {
-    private line: string = ''
-    private header: string = ''
-
-    constructor(line: string) {
-        this.line = line
+    private source : Iresult = {}
+    constructor(source: Iresult) {
+        this.source = source
     }
 
-    isLeftBrace (str: string): boolean {
-        return leftBrace.test(str)
-    }
-    getHeader (): string {
-        this.line.replace(leftBrace, (_, name: string) => {
-            this.header = name
-            return this.line
-        })
-        return this.header
-    }
-    isRightBrace (str: string): boolean {
-        return rightBrace.test(str)
-    }
-
-    parse () {
-        if (this.isLeftBrace(this.line)) {
-            this.getHeader()
+    getType (type: string): {type: string, builtin: boolean} {
+        let result: {type:string, builtin: boolean} = {type: type, builtin: false}
+        switch (type) {
+            case 'string':
+                result.type = type
+                result.builtin = true
+                break
+            case 'integer':
+                result.type = 'number'
+                result.builtin = true
+                break
+            default:
+                result.type = type
+                result.builtin = false
+                break
         }
-    }
 
+        return result
+    }
 }
 
 export interface Iline {
     name?: string
     type?: string
-    optional?: string
+    optional?: boolean
     comment?: string
 }
 
@@ -57,8 +57,13 @@ export class Receiver {
                 throw new Error('swagger文档格式有问题，连续出现两个 { { ，检查是否格式有问题')
             }
             this.offset = -1
-            line.replace(leftBrace, (_, name) => {
-                this.header = name.trim()
+            line.replace(leftBrace, (_, name: string) => {
+                if (name.indexOf(RESULT) > -1) {
+                    // swagger的入口
+                    this.header = RESULT
+                } else {
+                    this.header = name.trim()
+                }
                 return line
             })
             this.result[this.header] = []
@@ -92,8 +97,8 @@ export class Receiver {
             lineResult = {
                 name: name.trim(),
                 type,
-                optional,
-                comment
+                optional: !!optional,
+                comment: comment || ''
             }
             return line
         })
@@ -102,6 +107,10 @@ export class Receiver {
 
     getResult(): Iresult  {
         return this.result
+    }
+
+    getParsedResult () {
+        return new Resolver(this.result)
     }
 
     static instance (): Receiver {
