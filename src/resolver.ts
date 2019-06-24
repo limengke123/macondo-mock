@@ -44,9 +44,9 @@ export interface Iresult {
 }
 
 export class Receiver {
-    private offset: number = 0
-    private header: string = ''
-    private result: Iresult = {}
+    offset: number = 0
+    header: string = ''
+    result: Iresult = {}
 
     receive (line: string): never | Receiver {
         if (leftBrace.test(line)) {
@@ -77,19 +77,25 @@ export class Receiver {
                 // 不存在header的时候 直接报错
                 throw new Error('swagger 文档格式有问题，解析内容出现错误， 是否缺少 {')
             }
-            line.replace(bodyReg, (_, name, type, optional, comment) => {
-                const lineResult: Iline = {
-                    name,
-                    type,
-                    optional,
-                    comment
-                }
-                this.result[this.header].push(lineResult)
-                return line
-            })
+            const lineResult = this.resolveBody(line)
+            this.result[this.header].push(lineResult)
             return this
         }
         return this
+    }
+
+    resolveBody (line: string): Iline {
+        let lineResult: Iline = {}
+        line.replace(bodyReg, (_, name, type, optional, comment) => {
+            lineResult = {
+                name,
+                type,
+                optional,
+                comment
+            }
+            return line
+        })
+        return lineResult
     }
 
     getResult(): Iresult  {
