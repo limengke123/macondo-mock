@@ -56,7 +56,7 @@ describe('test resolver module', () => {
             expect(instance.header).toBe('')
         });
 
-        xit('should throw error when pass foot after offset is not -1', function () {
+        it('should throw error when pass foot after offset is not -1', function () {
             const instance = Receiver.instance()
             instance.offset = 0
             expect(() => instance.receive(foot)).toThrowError()

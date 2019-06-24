@@ -1,4 +1,4 @@
-const leftBrace: RegExp = /^\s*(\w*)\s*{.*/g
+const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
 const rightBrace: RegExp = /.*}.*/g
 const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
 const arrReg: RegExp = /array\[(\w+)]$/g
@@ -49,6 +49,8 @@ export class Receiver {
     result: Iresult = {}
 
     receive (line: string): never | Receiver {
+        // console.log(leftBrace.test('Result«WorkOrderView» {'))
+        // console.log(rightBrace.test('}'))
         if (leftBrace.test(line)) {
             // 遇到了 {
             if (this.offset !== 0) {
@@ -56,7 +58,7 @@ export class Receiver {
             }
             this.offset = -1
             line.replace(leftBrace, (_, name) => {
-                this.header = name
+                this.header = name.trim()
                 return line
             })
             this.result[this.header] = []
@@ -88,7 +90,7 @@ export class Receiver {
         let lineResult: Iline = {}
         line.replace(bodyReg, (_, name, type, optional, comment) => {
             lineResult = {
-                name,
+                name: name.trim(),
                 type,
                 optional,
                 comment
