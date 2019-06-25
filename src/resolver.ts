@@ -4,36 +4,10 @@ const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
 const arrReg: RegExp = /array\[(\w+)]$/g
 
 const RESULT = 'Result'
-
-export class Resolver {
-    private source : Iresult = {}
-    constructor(source: Iresult) {
-        this.source = source
-    }
-
-    getType (type: string): {type: string, builtin: boolean} {
-        let result: {type:string, builtin: boolean} = {type: type, builtin: false}
-        switch (type) {
-            case 'string':
-                result.type = type
-                result.builtin = true
-                break
-            case 'integer':
-                result.type = 'number'
-                result.builtin = true
-                break
-            default:
-                result.type = type
-                result.builtin = false
-                break
-        }
-
-        return result
-    }
-}
+const DATA = 'data'
 
 export interface Iline {
-    name?: string
+    name: string
     type?: string
     optional?: boolean
     comment?: string
@@ -41,6 +15,75 @@ export interface Iline {
 
 export interface Iresult {
     [name: string]: Iline[]
+}
+
+export interface Ischema {
+    type?: string,
+    optional?: boolean,
+    comment?: string,
+    data?: any
+}
+
+export class Resolver {
+    private readonly source : Iresult = {}
+    private schemaJson: {[propName: string]: Ischema} = {}
+    constructor(source: Iresult) {
+        this.source = source
+    }
+
+    generate (): never | void {
+        if (!this.source[RESULT]) {
+            throw new Error('不存在Result字段，无法解析')
+        }
+        const rootData = this.source[RESULT].find((item: Iline) => item.name === DATA)
+        if (!rootData) {
+            throw new Error('在Result字段上不存在data字段，无法解析')
+        }
+        const keys = Object.keys(this.source)
+        keys.forEach(key => {
+            this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
+                const {name, comment, optional, type} = current
+                const {transformType, builtin, defaultValue} = this.getType(type || '')
+                accu[name] = {
+                    type: transformType,
+                    comment,
+                    optional,
+                }
+                if (builtin) {
+                    accu[name]['data'] = defaultValue
+                }
+                return accu
+            }, {})
+        })
+    }
+
+    getType (type: string): {transformType: string, builtin: boolean, defaultValue?: any} {
+        let result: {transformType:string, builtin: boolean, defaultValue?: any} = {transformType: type, builtin: false}
+        switch (type) {
+            case 'string':
+                result.builtin = true
+                result.defaultValue = '这是默认的string'
+                break
+            case 'integer':
+                result.transformType = 'number'
+                result.builtin = true
+                result.defaultValue = 123
+                break
+            case 'boolean':
+                result.builtin = true
+                result.defaultValue = true
+                break
+            default:
+                result.builtin = false
+                break
+        }
+
+        return result
+    }
+
+    getSchemaJson (): {[propName: string]: Ischema} {
+        return this.schemaJson
+    }
 }
 
 export class Receiver {
@@ -92,7 +135,7 @@ export class Receiver {
     }
 
     resolveBody (line: string): Iline {
-        let lineResult: Iline = {}
+        let lineResult: Iline = {name: ''}
         line.replace(bodyReg, (_, name, type, optional, comment) => {
             lineResult = {
                 name: name.trim(),
@@ -107,6 +150,17 @@ export class Receiver {
 
     getResult(): Iresult  {
         return this.result
+    }
+
+    getSchemaJson (): {[propName: string]: Ischema} {
+        const resolver = new Resolver(this.result)
+        try {
+            resolver.generate()
+        } catch (e) {
+            console.log(e.message)
+            process.exit(1)
+        }
+        return resolver.getSchemaJson()
     }
 
     getParsedResult () {
