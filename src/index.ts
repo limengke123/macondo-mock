@@ -1,40 +1,19 @@
-import * as fs from 'fs'
-import * as readline from 'readline'
-import * as path from 'path'
-import { Receiver } from './resolver'
-import { writeFile } from './util'
+import { generateSchema } from './tasks/generateSchema'
+import { generateData } from './tasks/generateData'
 
-interface option {
+export interface option {
     swaggerPath: string,
     schemaPath: string
 }
 
 export const mock = function (option: option): void {
-    const { swaggerPath, schemaPath } = option
-    const readStream: fs.ReadStream = fs.createReadStream(swaggerPath)
-    const rl: readline.Interface = readline.createInterface({
-        input: readStream
-    })
-    const receiver: Receiver = Receiver.instance()
-    rl.on('line', (line: string) => {
-        try {
-            receiver.receive(line)
-        } catch (e) {
+    Promise.resolve()
+        // 生成 schema.json 文件
+        .then(() => generateSchema(option))
+        // 生成对应的 data 文件
+        .then(generateData)
+        .catch((e: Error) => {
             console.log(e.message)
             process.exit(-1)
-        }
-    })
-    rl.on('close', () => {
-        const schemaJson = receiver.getSchemaJson()
-        const realPath = path.resolve(schemaPath, './schema.json')
-        writeFile(realPath, JSON.stringify(schemaJson))
-            .then(() => {
-                console.log('成功创建 schema 文件：%s', schemaPath)
-            })
-            .catch((e: Error) => {
-                console.log('创建 schema 文件失败：\n')
-                console.log(e.message)
-                process.exit(1)
-            })
-    })
+        })
 }
