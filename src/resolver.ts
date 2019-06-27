@@ -21,7 +21,9 @@ export interface Ischema {
     type?: string,
     optional?: boolean,
     comment?: string,
-    data?: any
+    data?: any,
+    length?: number,
+    generics?: string
 }
 
 export class Resolver {
@@ -43,22 +45,34 @@ export class Resolver {
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, builtin, defaultValue} = this.getType(type || '')
+                const {transformType, builtin, defaultValue, length, generics} = this.getType(type || '')
                 accu[name] = {
                     type: transformType,
                     comment,
                     optional,
                 }
                 if (builtin) {
-                    accu[name]['data'] = defaultValue
+                    accu[name].data = defaultValue
+                }
+                if (transformType === 'array') {
+                    accu[name].length = length
+                    accu[name].generics = generics
                 }
                 return accu
             }, {})
         })
     }
 
-    getType (type: string): {transformType: string, builtin: boolean, defaultValue?: any} {
-        let result: {transformType:string, builtin: boolean, defaultValue?: any} = {transformType: type, builtin: false}
+    getType (type: string): {transformType: string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} {
+        let result: {transformType:string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} = {transformType: type, builtin: false}
+        if (arrReg.test(type)) {
+            return {
+                builtin: false,
+                transformType: 'array',
+                length: 1,
+                generics: this.resolveArray(type)
+            }
+        }
         switch (type) {
             case 'string':
                 result.builtin = true
@@ -78,6 +92,15 @@ export class Resolver {
                 break
         }
 
+        return result
+    }
+
+    resolveArray (str: string): string {
+        let result: string = ''
+        str.replace(arrReg, (_, generics) => {
+            result = generics
+            return str
+        })
         return result
     }
 
@@ -148,10 +171,6 @@ export class Receiver {
         return lineResult
     }
 
-    getResult(): Iresult  {
-        return this.result
-    }
-
     getSchemaJson (): {[propName: string]: Ischema} {
         const resolver = new Resolver(this.result)
         try {
@@ -161,10 +180,6 @@ export class Receiver {
             process.exit(1)
         }
         return resolver.getSchemaJson()
-    }
-
-    getParsedResult () {
-        return new Resolver(this.result)
     }
 
     static instance (): Receiver {
