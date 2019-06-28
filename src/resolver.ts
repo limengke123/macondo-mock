@@ -45,7 +45,7 @@ export class Resolver {
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, builtin, defaultValue, length, generics} = this.getType(type || '')
+                const {transformType, builtin, defaultValue, length, generics} = Resolver.getType(type || '')
                 accu[name] = {
                     type: transformType,
                     comment,
@@ -63,14 +63,14 @@ export class Resolver {
         })
     }
 
-    getType (type: string): {transformType: string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} {
+    static getType (type: string): {transformType: string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} {
         let result: {transformType:string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} = {transformType: type, builtin: false}
         if (arrReg.test(type)) {
             return {
                 builtin: false,
                 transformType: 'array',
-                length: 1,
-                generics: this.resolveArray(type)
+                length: 2,
+                generics: Resolver.resolveArray(type)
             }
         }
         switch (type) {
@@ -80,6 +80,10 @@ export class Resolver {
                 break
             case 'integer':
                 result.transformType = 'number'
+                result.builtin = true
+                result.defaultValue = 123
+                break
+            case 'number':
                 result.builtin = true
                 result.defaultValue = 123
                 break
@@ -95,7 +99,7 @@ export class Resolver {
         return result
     }
 
-    resolveArray (str: string): string {
+    static resolveArray (str: string): string {
         let result: string = ''
         str.replace(arrReg, (_, generics) => {
             result = generics

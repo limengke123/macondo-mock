@@ -13,7 +13,7 @@ export const writeFile = (path: string, data: string) => {
 }
 
 export const readJsonFile = (path: string) => {
-    return new Promise<object>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
         fs.readFile(path, (e, buf) => {
             if (e) {
                 return reject(e)

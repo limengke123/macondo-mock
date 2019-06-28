@@ -14,6 +14,7 @@ export const mock = function (option: option): void {
         .then(generateData)
         .catch((e: Error) => {
             console.log(e.message)
+            console.log(e.stack)
             process.exit(-1)
         })
 }
