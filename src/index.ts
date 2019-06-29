@@ -18,3 +18,5 @@ export const mock = function (option: option): void {
             process.exit(-1)
         })
 }
+
+export default mock

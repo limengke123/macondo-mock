@@ -1,4 +1,5 @@
-import { readJsonFile } from '../util'
+import * as path from 'path'
+import { readJsonFile, writeFile } from '../util'
 import { Ischema, Resolver } from '../resolver'
 
 const ENTRY = 'Result'
@@ -10,9 +11,13 @@ export function generateData (schemaPath: string) {
             if (!schema[ENTRY]) {
                 return Promise.reject('不存在 Result 字段，无法解析')
             }
-            const result = parse(schema[ENTRY] as {[key: string]: Ischema}, schema)
-            // @ts-ignore
-            console.log(result.data.feedbackDos)
+            return parse(schema[ENTRY] as {[key: string]: Ischema}, schema)
+        })
+        .then(result => {
+            return writeFile(path.resolve(schemaPath, '..' , './data.json'), JSON.stringify(result))
+        })
+        .then(() => {
+            console.log('成功创建 data.json')
         })
 }
 
