@@ -1,3 +1,5 @@
+import {Result} from "range-parser";
+
 const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
 const rightBrace: RegExp = /.*}.*/g
 const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
@@ -21,9 +23,9 @@ export interface Ischema {
     type?: string,
     optional?: boolean,
     comment?: string,
-    data?: any,
-    length?: number,
-    generics?: string
+    generics?: string,
+    mock?: string,
+    data?: any
 }
 
 export class Resolver {
@@ -35,27 +37,26 @@ export class Resolver {
 
     generate (): never | void {
         if (!this.source[RESULT]) {
-            throw new Error('不存在Result字段，无法解析')
+            throw new Error(`不存在${RESULT}字段，无法解析`)
         }
         const rootData = this.source[RESULT].find((item: Iline) => item.name === DATA)
         if (!rootData) {
-            throw new Error('在Result字段上不存在data字段，无法解析')
+            throw new Error(`在${RESULT}字段上不存在${DATA}字段，无法解析`)
         }
         const keys = Object.keys(this.source)
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, builtin, defaultValue, length, generics} = Resolver.getType(type || '')
+                const {transformType, generics, mock} = Resolver.getType(type || '')
                 accu[name] = {
                     type: transformType,
                     comment,
                     optional,
                 }
-                if (builtin) {
-                    accu[name].data = defaultValue
+                if (mock) {
+                    accu[name].mock = mock
                 }
                 if (transformType === 'array') {
-                    accu[name].length = length
                     accu[name].generics = generics
                 }
                 return accu
@@ -63,36 +64,30 @@ export class Resolver {
         })
     }
 
-    static getType (type: string): {transformType: string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} {
-        let result: {transformType:string, builtin: boolean, defaultValue?: any, length?: number, generics?: string} = {transformType: type, builtin: false}
+    static getType (type: string): {transformType: string, generics?: string, mock?: string} {
+        let result: {transformType:string, generics?: string, mock?: string} = {transformType: type}
         if (arrReg.test(type)) {
             return {
-                builtin: false,
                 transformType: 'array',
-                length: 2,
-                generics: Resolver.resolveArray(type)
+                generics: Resolver.resolveArray(type),
+                mock: '@integer(0, 50)'
             }
         }
         switch (type) {
             case 'string':
-                result.builtin = true
-                result.defaultValue = '这是默认的string'
+                result.mock = '@csentence'
                 break
             case 'integer':
                 result.transformType = 'number'
-                result.builtin = true
-                result.defaultValue = 123
+                result.mock = '@integer(1, 10000)'
                 break
             case 'number':
-                result.builtin = true
-                result.defaultValue = 123
+                result.mock = '@integer(1, 10000)'
                 break
             case 'boolean':
-                result.builtin = true
-                result.defaultValue = true
+                result.mock = '@boolean'
                 break
             default:
-                result.builtin = false
                 break
         }
 

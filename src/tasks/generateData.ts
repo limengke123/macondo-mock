@@ -1,4 +1,5 @@
 import * as path from 'path'
+import * as Mock from 'mockjs'
 import { readJsonFile, writeFile } from '../util'
 import { Ischema, Resolver } from '../resolver'
 
@@ -33,7 +34,7 @@ function parse<T, K extends keyof T>(root: T, source: any): Map<string, Ischema>
     let result = {} as any
     return keys.reduce((accu, currentKey) => {
         const schema = root[currentKey] as Ischema
-        const { type, generics, length, comment, data, optional } = schema
+        const { type, generics, mock, data } = schema
         if (data) {
             // 存在data字段了， 不需要搞别的值了
             accu[currentKey] = data
@@ -42,15 +43,23 @@ function parse<T, K extends keyof T>(root: T, source: any): Map<string, Ischema>
                 if (!generics) {
                     throw new Error('数组类型缺少泛型 generics')
                 }
+                const length = Mock.mock(mock)
                 if (source[generics]) {
                     // 其他类型的值
                     accu[currentKey] = new Array(length).fill(0).map(() => parse(source[generics], source))
                 } else {
                     // 基本类型的值
-                    accu[currentKey] = new Array(length).fill(0).map(() => Resolver.getType(generics).defaultValue)
+                    const { mock } = Resolver.getType(generics)
+                    accu[currentKey] = new Array(length).fill(0).map(() => Mock.mock(mock))
                 }
             } else {
-                accu[currentKey] = parse(source[type || ''], source)
+                if (mock) {
+                    // 一般类型
+                    accu[currentKey] = Mock.mock(mock)
+                } else {
+                    // 复合类型
+                    accu[currentKey] = parse(source[type || ''], source)
+                }
             }
         }
         return accu
