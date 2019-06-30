@@ -4,6 +4,8 @@ const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
 const rightBrace: RegExp = /.*}.*/g
 const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
 const arrReg: RegExp = /array\[(\w+)]$/g
+const timeReg: RegExp = /\w*(?:[dD]ate)|(?:[tT]ime)\w*/g
+const idReg: RegExp = /\w*[iI]d$/g
 
 const RESULT = 'Result'
 const DATA = 'data'
@@ -47,7 +49,7 @@ export class Resolver {
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, generics, mock} = Resolver.getType(type || '')
+                const {transformType, generics, mock} = Resolver.getType(type || '', name)
                 accu[name] = {
                     type: transformType,
                     comment,
@@ -64,7 +66,7 @@ export class Resolver {
         })
     }
 
-    static getType (type: string): {transformType: string, generics?: string, mock?: string} {
+    static getType (type: string, name?: string): {transformType: string, generics?: string, mock?: string} {
         let result: {transformType:string, generics?: string, mock?: string} = {transformType: type}
         if (arrReg.test(type)) {
             return {
@@ -75,14 +77,14 @@ export class Resolver {
         }
         switch (type) {
             case 'string':
-                result.mock = '@csentence'
+                result.mock = Resolver.handleStringMock(name)
                 break
             case 'integer':
                 result.transformType = 'number'
-                result.mock = '@integer(1, 10000)'
+                result.mock = Resolver.handleNumberMock(name)
                 break
             case 'number':
-                result.mock = '@integer(1, 10000)'
+                result.mock = Resolver.handleNumberMock(name)
                 break
             case 'boolean':
                 result.mock = '@boolean'
@@ -92,6 +94,23 @@ export class Resolver {
         }
 
         return result
+    }
+
+    static handleStringMock (name: string = ''): string {
+        if (timeReg.test(name)) {
+            return '@datetime'
+        }
+        if (idReg.test(name)) {
+            return '@increment'
+        }
+        return '@csentence'
+    }
+
+    static handleNumberMock (name: string = ''): string {
+        if (idReg.test(name)) {
+            return '@increment'
+        }
+        return '@integer(1, 10000)'
     }
 
     static resolveArray (str: string): string {

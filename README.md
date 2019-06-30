@@ -13,12 +13,13 @@
 
 ### 默认 mock 类型
 
-| 类型 | 默认值 `mock` 值 | 实例 |
-| --- | --- | --- |
-| string | @csentence | "白高长正深常究厂影常小际么知影证。" |
-| number | @integer(1, 10000) | 729 |
-| boolean | @boolean | true |
-| array.length | @integer(0, 50) | 38 |
+| 类型 | 默认值 `mock` 值 | 解释 | 实例 |
+| --- | --- | --- | --- |
+| string | @csentence | 一般字符串 | "白高长正深常究厂影常小际么知影证。" |
+| number | @integer(1, 10000) | 一般数字 | 729 |
+| boolean | @boolean | 布尔值 | true |
+| array.length | @integer(0, 50) | 数组的长度 | 38 |
+| // | @datetime | 符合正则的时间类型 | "2014-02-18 20:33:40" |
 
 ### 覆盖默认 mock 数据
 

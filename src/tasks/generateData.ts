@@ -55,6 +55,10 @@ function parse<T, K extends keyof T>(root: T, source: any): Map<string, Ischema>
             } else {
                 if (mock) {
                     // 一般类型
+                    if (type === 'string') {
+                        // 有可能是数字类型的，需要专程字符串
+                        accu[currentKey] = '' + Mock.mock(mock)
+                    }
                     accu[currentKey] = Mock.mock(mock)
                 } else {
                     // 复合类型
