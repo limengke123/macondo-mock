@@ -14,10 +14,16 @@ export function generateData (schemaPath: string) {
             return parse(schema[ENTRY] as {[key: string]: Ischema}, schema)
         })
         .then(result => {
-            return writeFile(path.resolve(schemaPath, '..' , './data.json'), JSON.stringify(result))
+            const dataPath = path.resolve(schemaPath, '..', './data.json')
+            const data = {
+                result: result
+            }
+            const writePromise = writeFile(dataPath, JSON.stringify(data))
+            return Promise.all([dataPath, writePromise])
         })
-        .then(() => {
-            console.log('成功创建 data.json')
+        .then(([dataPath, _]) => {
+            console.log('成功生成数据文件：%s', dataPath)
+            return dataPath
         })
 }
 

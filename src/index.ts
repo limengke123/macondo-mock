@@ -1,9 +1,11 @@
 import { generateSchema } from './tasks/generateSchema'
 import { generateData } from './tasks/generateData'
+import { startServer } from './tasks/server'
 
 export interface option {
     swaggerPath: string,
-    schemaPath: string
+    schemaPath: string,
+    port?: number
 }
 
 export const mock = function (option: option): void {
@@ -12,6 +14,9 @@ export const mock = function (option: option): void {
         .then(() => generateSchema(option))
         // 生成对应的 data 文件
         .then(generateData)
+        .then((dataPath: string) => {
+            return startServer(dataPath, option.port)
+        })
         .catch((e: Error) => {
             console.log(e.message)
             console.log(e.stack)
