@@ -1,11 +1,31 @@
 # macondo-mock
 
+> macondo 是**百年孤独**中的一个地名，译作**马孔多**。
+
 本地的一种接口 `mock` 方案，在得到接口的 `swagger` 文档之后生成本地 mock 接口服务，方便本地调试使用。
 
 ## 使用场景
 
 1. 服务端接口定义好了，但是没有具体实现好或是不能调用的时候，用本地 `mock` 代替。
 2. 查询类数据，服务端接口数据可能不够充足，不方便页面调试，本地 `mock` 就能很好解决。
+3. 在离线环境、网络不稳定的情况下方便调试。
+
+## 使用
+pass
+
+## 配置化
+
+`macondo-mock` 是高度可配置化，如同`babel`、`typescript`、`jest` 的配置文件一样，可以在 `package.json` 中加入 `"macondo-mock"` 字段，或者是新建 `macondo-mockrc.yaml`、`macondo-mockrc.yml`、`macondo-mockrc.json`、`macondo-mockrc.js`、`macondo-mock.config.js` 写入配置项。
+
+### 配置项
+
+#### swagger解析配置
+
+| fileds | 类型 | 默认值 | 解释 |
+| --- | --- | --- | --- |
+| swaggerPath | string | - | swagger文档的路径 |
+| schemaPath | string | - | schema.json文件生成的路径 |
+
 
 ## 获取 mock 类型
 
@@ -53,4 +73,3 @@
 
 对于基本类型的数据，给 `data` 字段赋值就能覆盖mock数据，数组长度只需覆盖 `length`字段就能固定长度。
 
-## 使用
