@@ -1,4 +1,4 @@
-import {Result} from "range-parser";
+import {Result} from 'range-parser'
 
 // swagger文档的解析正则
 const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
@@ -64,9 +64,6 @@ export class Resolver {
                     optional,
                 }
                 if (mock) {
-                    if (typeof mock !== "string") {
-                        console.log(mock)
-                    }
                     accu[name].mock = mock
                 }
                 if (transformType === 'array') {
@@ -87,21 +84,21 @@ export class Resolver {
             }
         }
         switch (type) {
-            case 'string':
-                result.mock = Resolver.handleStringMock(name)
-                break
-            case 'integer':
-                result.transformType = 'number'
-                result.mock = Resolver.handleNumberMock(name)
-                break
-            case 'number':
-                result.mock = Resolver.handleNumberMock(name)
-                break
-            case 'boolean':
-                result.mock = '@boolean'
-                break
-            default:
-                break
+        case 'string':
+            result.mock = Resolver.handleStringMock(name)
+            break
+        case 'integer':
+            result.transformType = 'number'
+            result.mock = Resolver.handleNumberMock(name)
+            break
+        case 'number':
+            result.mock = Resolver.handleNumberMock(name)
+            break
+        case 'boolean':
+            result.mock = '@boolean'
+            break
+        default:
+            break
         }
 
         return result

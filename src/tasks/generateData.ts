@@ -2,10 +2,11 @@ import * as path from 'path'
 import * as Mock from 'mockjs'
 import { readJsonFile, writeFile } from '../util'
 import { Ischema, Resolver } from '../resolver'
+import {optionTuple} from '../index'
 
 const ENTRY = 'Result'
 
-export function generateData (schemaPath: string) {
+export function generateData ([option, schemaPath]: optionTuple): Promise<optionTuple> {
     return Promise.resolve()
         .then(() => readJsonFile(schemaPath))
         .then((schema): any => {
@@ -24,7 +25,10 @@ export function generateData (schemaPath: string) {
         })
         .then(([dataPath, _]) => {
             console.log('成功生成数据文件：%s', dataPath)
-            return dataPath
+            return [
+                option,
+                dataPath
+            ]
         })
 }
 

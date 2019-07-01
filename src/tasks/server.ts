@@ -1,7 +1,8 @@
 import * as jsonServer from 'json-server'
+import { optionTuple } from '../index'
 
-export const startServer = (dataPath: string, port: number = 3000) => {
-    console.log(dataPath)
+export const startServer = ([option, dataPath]: optionTuple) => {
+    const { port } = option
     const server = jsonServer.create()
     const router = jsonServer.router(dataPath)
     const middleware = jsonServer.defaults()
@@ -9,7 +10,7 @@ export const startServer = (dataPath: string, port: number = 3000) => {
     server.use(middleware)
     server.use(jsonServer.bodyParser)
     server.use(router)
-    server.listen(3000, () => {
+    server.listen(port, () => {
         console.log('mock server is start localhost:%s', port)
     })
 }
