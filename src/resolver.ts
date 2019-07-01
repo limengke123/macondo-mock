@@ -1,11 +1,19 @@
 import {Result} from "range-parser";
 
+// swagger文档的解析正则
 const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
 const rightBrace: RegExp = /.*}.*/g
 const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
 const arrReg: RegExp = /array\[(\w+)]$/g
-const timeReg: RegExp = /\w*(?:[dD]ate)|(?:[tT]ime)\w*/g
-const idReg: RegExp = /\w*[iI]d$/g
+// 字段修饰正则，去推测字段名对应的 mock 类型
+const timeReg: RegExp = /\w*(?:[dD]ate)|(?:[tT]ime)\w*/
+const idReg: RegExp = /\w*[iI]d$/
+const userNameReg: RegExp = /\w*[nN]ame$/
+const provinceReg: RegExp = /^province(?:Name)?$/
+const cityReg: RegExp = /^city(?:Name)?$/
+const picReg: RegExp = /\w*[pP]ics?|\w*[pP]ictures?|\w*[iI]mgs?|\w*[iI]mages?/
+const codeReg: RegExp = /\w*[cC]ode$/
+const phoneReg: RegExp = /\w*[pP]hone(?:Number)?/
 
 const RESULT = 'Result'
 const DATA = 'data'
@@ -26,7 +34,7 @@ export interface Ischema {
     optional?: boolean,
     comment?: string,
     generics?: string,
-    mock?: string,
+    mock?: string | {regexp: string},
     data?: any
 }
 
@@ -56,6 +64,9 @@ export class Resolver {
                     optional,
                 }
                 if (mock) {
+                    if (typeof mock !== "string") {
+                        console.log(mock)
+                    }
                     accu[name].mock = mock
                 }
                 if (transformType === 'array') {
@@ -66,8 +77,8 @@ export class Resolver {
         })
     }
 
-    static getType (type: string, name?: string): {transformType: string, generics?: string, mock?: string} {
-        let result: {transformType:string, generics?: string, mock?: string} = {transformType: type}
+    static getType (type: string, name?: string): {transformType: string, generics?: string, mock?: string | {regexp: string} } {
+        let result: {transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
         if (arrReg.test(type)) {
             return {
                 transformType: 'array',
@@ -96,12 +107,33 @@ export class Resolver {
         return result
     }
 
-    static handleStringMock (name: string = ''): string {
+    static handleStringMock (name: string = ''): string | {regexp: string} {
         if (timeReg.test(name)) {
             return '@datetime'
         }
         if (idReg.test(name)) {
             return '@increment'
+        }
+        if (provinceReg.test(name)) {
+            return '@province'
+        }
+        if (cityReg.test(name)) {
+            return '@city'
+        }
+        if (picReg.test(name)) {
+            return '@image'
+        }
+        if (codeReg.test(name)) {
+            return '@string("lower", 8)'
+        }
+        if (phoneReg.test(name)) {
+            // json 不支持正则表达式，这里给他转换成字符串
+            return {
+                regexp: '\\d{11}'
+            }
+        }
+        if (userNameReg.test(name)) {
+            return '@cname'
         }
         return '@csentence'
     }
