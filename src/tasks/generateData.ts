@@ -3,15 +3,18 @@ import * as Mock from 'mockjs'
 import { readJsonFile, writeFile } from '../util/fsUtil'
 import { Ischema, Resolver } from '../core/resolver'
 import {optionTuple} from '../index'
+import { success } from '../util/commonUtil'
 
 const ENTRY = 'Result'
+
+const ERROR_PATH = '3. 生成data.json： '
 
 export function generateData ([option, schemaPath]: optionTuple): Promise<optionTuple> {
     return Promise.resolve()
         .then(() => readJsonFile(schemaPath))
         .then((schema): any => {
             if (!schema[ENTRY]) {
-                return Promise.reject('不存在 Result 字段，无法解析')
+                throw new Error(ERROR_PATH + '不存在 Result 字段，无法解析')
             }
             return parse(schema[ENTRY] as {[key: string]: Ischema}, schema)
         })
@@ -24,7 +27,7 @@ export function generateData ([option, schemaPath]: optionTuple): Promise<option
             return Promise.all([dataPath, writePromise])
         })
         .then(([dataPath, _]) => {
-            console.log('成功生成数据文件：%s', dataPath)
+            success(`${ERROR_PATH}成功生成数据文件：${dataPath}`,)
             return [
                 option,
                 dataPath
@@ -45,7 +48,7 @@ function parse<T, K extends keyof T>(root: T, source: any): Map<string, Ischema>
         } else {
             if (type === 'array') {
                 if (!generics) {
-                    throw new Error('数组类型缺少泛型 generics')
+                    throw new Error(ERROR_PATH + '数组类型缺少泛型 generics')
                 }
                 const length = getMockData(mock)
                 if (source[generics]) {

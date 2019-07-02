@@ -2,6 +2,7 @@ import { loadConfig } from './tasks/loadConfig'
 import { generateSchema } from './tasks/generateSchema'
 import { generateData } from './tasks/generateData'
 import { startServer } from './tasks/server'
+import { error } from './util/commonUtil'
 
 export interface option {
     swaggerPath?: string,
@@ -26,8 +27,8 @@ export const mock = function (option: option): void {
         // 4. 开启本地服务
         .then(startServer)
         .catch((e: Error) => {
-            console.log(e.message)
-            console.log(e.stack)
+            error(e.message)
+            error(e.stack, false)
             process.exit(-1)
         })
 }
