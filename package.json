@@ -24,7 +24,7 @@
         "type": "git",
         "url": "git+https://github.com/limengke123/macondo-mock.git"
     },
-    "keywords": [],
+    "keywords": ["mock", "local-mock", "json-server", "mockjs"],
     "author": "",
     "license": "ISC",
     "bugs": {
