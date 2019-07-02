@@ -19,12 +19,18 @@ pass
 
 ### 配置项
 
-#### swagger解析配置
+#### swagger 解析配置
 
 | fileds | 类型 | 默认值 | 解释 |
 | --- | --- | --- | --- |
 | swaggerPath | string | - | swagger文档的路径 |
 | schemaPath | string | - | schema.json文件生成的路径 |
+
+#### server 配置
+
+| fields | 类型 | 默认值 | 解释 |
+| --- | --- | --- | --- |
+| 端口 | number | 3000 | 本地服务的端口号 |
 
 
 ## 获取 mock 类型
@@ -72,4 +78,8 @@ pass
 ### 覆盖默认 mock 数据
 
 对于基本类型的数据，给 `data` 字段赋值就能覆盖mock数据，数组长度只需覆盖 `length`字段就能固定长度。
+
+## 用例
+
+[点击这里](https://github.com/limengke123/macondo-mock/blob/master/example)查看使用用例。
 
