@@ -9,13 +9,16 @@ const SCHEMA_FILE = './schema.json'
 
 export function generateSchema ([option]: optionTuple) {
     const { swaggerPath, schemaPath } = option
-    return accessFile(path.resolve(schemaPath as string, SCHEMA_FILE))
+    const SCHEMA_FILE_PATH = path.resolve(schemaPath as string, SCHEMA_FILE)
+    return accessFile(SCHEMA_FILE_PATH)
         .then(([exists, write]: access) => {
             return new Promise<optionTuple>((resolve, reject) => {
-                if (!swaggerPath) {
-                    throw new Error('没有接收到 swaggerPath 字段，请检查下')
+                if (exists) {
+                    // schema.json 文件存在，跳过生成步骤
+                    console.log(`文件 ${SCHEMA_FILE_PATH} 已经存在，跳过生成 schema.json 文件步骤`)
+                    return resolve([option, SCHEMA_FILE_PATH])
                 }
-                const readStream: fs.ReadStream = fs.createReadStream(swaggerPath)
+                const readStream: fs.ReadStream = fs.createReadStream(swaggerPath as string)
                 const rl: readline.Interface = readline.createInterface({
                     input: readStream
                 })
@@ -29,13 +32,10 @@ export function generateSchema ([option]: optionTuple) {
                 })
                 rl.on('close', () => {
                     const schemaJson = receiver.getSchemaJson()
-                    if (!schemaPath) {
-                        throw new Error('没有接收到 schemaPath 字段，请检查下')
-                    }
-                    const realPath = path.resolve(schemaPath, './schema.json')
+                    const realPath = path.resolve(schemaPath as string, './schema.json')
                     writeFile(realPath, JSON.stringify(schemaJson))
                         .then(() => {
-                            const schemaFilePath = path.resolve(schemaPath, './schema.json')
+                            const schemaFilePath = path.resolve(schemaPath as string, './schema.json')
                             console.log('成功创建 schema 文件：%s', schemaFilePath)
                             resolve([
                                 option,
