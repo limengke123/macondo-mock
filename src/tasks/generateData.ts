@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as Mock from 'mockjs'
-import { readJsonFile, writeFile } from '../util'
-import { Ischema, Resolver } from '../resolver'
+import { readJsonFile, writeFile } from '../util/fsUtil'
+import { Ischema, Resolver } from '../core/resolver'
 import {optionTuple} from '../index'
 
 const ENTRY = 'Result'

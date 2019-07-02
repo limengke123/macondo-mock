@@ -1,8 +1,8 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import * as readline from 'readline'
-import { writeFile, accessFile, access } from '../util'
-import { Receiver } from '../resolver'
+import { writeFile, accessFile, access } from '../util/fsUtil'
+import { Receiver } from '../core/resolver'
 import { optionTuple } from '../index'
 
 const SCHEMA_FILE = './schema.json'

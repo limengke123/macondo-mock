@@ -1,4 +1,4 @@
-import {Iline, Receiver, Resolver} from '../resolver'
+import {Iline, Receiver, Resolver} from '../core/resolver'
 
 describe('test resolver module', () => {
 
