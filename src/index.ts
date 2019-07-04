@@ -16,7 +16,7 @@ const defaultOption: option = {
 
 export type optionTuple = [option, any]
 
-export const mock = function (option: option): void {
+const mock = function (option: option): void {
     Promise.resolve({...defaultOption, ...option})
         // 1. 加载本地的 config 文件
         .then(loadConfig)
@@ -31,6 +31,14 @@ export const mock = function (option: option): void {
             error(e.stack, false)
             process.exit(-1)
         })
+}
+
+export {
+    mock,
+    loadConfig,
+    generateData,
+    generateSchema,
+    startServer
 }
 
 export default mock
