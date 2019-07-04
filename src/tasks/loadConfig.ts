@@ -5,7 +5,7 @@ import {success} from '../util/commonUtil'
 
 const ERROR_PATH = '1. 加载 config： '
 
-export function loadConfig (option: option): Promise<optionTuple> {
+export function loadConfig (option: option = {}): Promise<optionTuple> {
     const explorer = cosmiconfig(name)
     return explorer.search()
         .then(result => {
