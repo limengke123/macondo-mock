@@ -7,7 +7,7 @@ import { success } from '../util/commonUtil'
 
 const ENTRY = 'Result'
 
-const ERROR_PATH = '3. 生成data.json： '
+const ERROR_PATH = '3. 生成db.json： '
 
 export function generateData ([option, schemaPath]: optionTuple): Promise<optionTuple> {
     return Promise.resolve()
@@ -19,7 +19,7 @@ export function generateData ([option, schemaPath]: optionTuple): Promise<option
             return parse(schema[ENTRY] as {[key: string]: Ischema}, schema)
         })
         .then(result => {
-            const dataPath = path.resolve(schemaPath, '..', './data.json')
+            const dataPath = path.resolve(schemaPath, '..', './db.json')
             const data = {
                 result: result
             }
