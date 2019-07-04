@@ -8,8 +8,9 @@ import { success } from '../util/commonUtil'
 const ENTRY = 'Result'
 const ERROR_PATH = '3. 生成db.json： '
 
-export function generateData ([option, schemaPath]: optionTuple): Promise<optionTuple> {
+export function generateData ([option, schemaPath]: optionTuple, force: boolean = false): Promise<optionTuple> {
     return Promise.resolve()
+    // todo: 解决db.json文件的重复多次生成
         .then(() => readJsonFile(schemaPath))
         .then((schema): any => {
             if (!schema[ENTRY]) {
