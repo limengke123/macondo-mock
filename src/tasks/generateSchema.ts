@@ -9,7 +9,6 @@ import { success } from '../util/commonUtil'
 const SCHEMA_FILE = './schema.json'
 const ERROR_PATH = '2. 生成 schema.json： '
 
-
 export function generateSchema ([option]: optionTuple, force: boolean = false): Promise<optionTuple> {
     const { swaggerPath, schemaPath } = option
     const SCHEMA_FILE_PATH = path.resolve(schemaPath as string, SCHEMA_FILE)
