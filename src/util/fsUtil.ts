@@ -45,3 +45,11 @@ export const accessFile = (path: fs.PathLike) => {
         })
     })
 }
+
+export const fsStats = (path: fs.PathLike): fs.Stats => {
+    return fs.statSync(path)
+}
+
+export const isDictory = (path: fs.PathLike): boolean => {
+    return fsStats(path).isDirectory()
+}
