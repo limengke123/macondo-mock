@@ -1,4 +1,4 @@
-# 1.0.0 (2019-07-02)
+# [1.1.0](https://github.com/limengke123/macondo-mock/compare/2aaf70a...v1.1.0) (2019-07-02)
 
 
 ### Features
