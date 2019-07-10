@@ -17,7 +17,7 @@ export function generateData ([option, schemaPath]: optionTuple, force: boolean 
                 if (!exists) {
                     return _generateData()
                 } else {
-                    success(`${DB_JSON_FILE}文件已经存在，跳过生成 db.json 文件步骤`)
+                    success(`${ERROR_PATH}${DB_JSON_FILE}文件已经存在，跳过生成 db.json 文件步骤`)
                     return [option, dataPath]
                 }
             })
