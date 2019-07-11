@@ -1,5 +1,5 @@
-import * as fs from 'fs'
 import { loadConfig } from './tasks/loadConfig'
+import { loadDir } from './tasks/loadDir'
 import { generateSchema } from './tasks/generateSchema'
 import { generateData } from './tasks/generateData'
 import { startServer } from './tasks/server'
@@ -11,15 +11,19 @@ import { error } from './util/commonUtil'
  * serverOption 本地服务的设置
  * */
 export interface option {
+    baseOption?: baseOption
     schemaOption?: schemaOption
     dbOption?: dbOption
     serverOption?: serverOption
 }
 
+export interface baseOption {
+    mockPath?: string
+}
+
 export interface schemaOption {
-    schemaPath?: fs.PathLike
-    swaggerPath?: fs.PathLike,
-    mockPath?: fs.PathLike
+    schemaPath?: string
+    swaggerPath?: string,
 }
 
 export interface dbOption {
@@ -30,9 +34,10 @@ export interface serverOption {
 }
 
 const defaultOption: option = {
-    schemaOption: {
+    baseOption: {
         mockPath: './mock'
     },
+    schemaOption: {},
     dbOption: {},
     serverOption: {
         port: 3000
@@ -45,6 +50,7 @@ const mock = function (option: option = {}): void {
     Promise.resolve({...defaultOption, ...option})
         // 1. 加载本地的 config 文件
         .then(loadConfig)
+        .then(loadDir)
         // 2. 生成 schema.json 文件
         .then(generateSchema)
         // 3. 生成对应的 data.json 文件

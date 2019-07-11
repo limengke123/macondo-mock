@@ -24,6 +24,9 @@ export function loadConfig (option: option = {}): Promise<optionTuple> {
             if (!mergeOption.schemaOption!.swaggerPath) {
                 throw new Error(ERROR_PATH + '不存在 swaggerPath 字段')
             }
+            if (!mergeOption.baseOption!.mockPath) {
+                throw new Error(ERROR_PATH + '不存在 mockPath 字段')
+            }
             success(`${ERROR_PATH} 成功解析配置文件`)
             return [mergeOption, option]
         })
