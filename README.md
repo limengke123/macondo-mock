@@ -83,3 +83,13 @@ pass
 
 [点击这里](https://github.com/limengke123/macondo-mock/blob/master/example)查看使用用例。
 
+## 注意事项
+
+自动生成的 `db.json` 是做为最直接数据源生成接口数据，由于所有的接口全部生成在这个 `json` 文件中，这个文件会非常大，避免直接去修改 `db.json` 来改动接口数据。
+如需固定某个字段返回值，可在 `schema.json` 文件对该字段的 `data` 字段修改为需要固定的数据。
+
+---
+
+默认schema.json、db.json数据只会生成一次
+
+
