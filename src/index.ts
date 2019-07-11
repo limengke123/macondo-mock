@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import { loadConfig } from './tasks/loadConfig'
 import { generateSchema } from './tasks/generateSchema'
 import { generateData } from './tasks/generateData'
@@ -16,8 +17,9 @@ export interface option {
 }
 
 export interface schemaOption {
-    schemaPath?: string
-    swaggerPath?: string
+    schemaPath?: fs.PathLike
+    swaggerPath?: fs.PathLike,
+    mockPath?: fs.PathLike
 }
 
 export interface dbOption {
@@ -28,7 +30,9 @@ export interface serverOption {
 }
 
 const defaultOption: option = {
-    schemaOption: {},
+    schemaOption: {
+        mockPath: './mock'
+    },
     dbOption: {},
     serverOption: {
         port: 3000

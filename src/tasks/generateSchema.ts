@@ -1,54 +1,18 @@
-import * as fs from 'fs'
 import * as path from 'path'
-import * as readline from 'readline'
-import { writeFile, accessFile, access } from '../util/fsUtil'
-import { Receiver } from '../core/resolver'
+import { generateSingleSchema } from '../core/generateSingleSchema'
 import { optionTuple } from '../index'
-import { success } from '../util/commonUtil'
 
 const SCHEMA_FILE = './schema.json'
-const ERROR_PATH = '2. 生成 schema.json： '
 
-export function generateSchema ([option]: optionTuple, force: boolean = false): Promise<optionTuple> {
+export function generateSchema ([option]: optionTuple): Promise<optionTuple> {
     const { schemaOption } = option
-    const { swaggerPath, schemaPath } = schemaOption!
+    const { schemaPath } = schemaOption!
     const SCHEMA_FILE_PATH = path.resolve(schemaPath as string, SCHEMA_FILE)
-    return accessFile(SCHEMA_FILE_PATH)
-        .then(([exists, write]: access) => {
-            return new Promise<optionTuple>((resolve, reject) => {
-                if (exists && !force) {
-                    // schema.json 文件存在，跳过生成步骤
-                    success(`${ERROR_PATH}文件 ${SCHEMA_FILE_PATH} 已经存在，跳过生成 schema.json 文件步骤`)
-                    return resolve([option, SCHEMA_FILE_PATH])
-                }
-                const readStream: fs.ReadStream = fs.createReadStream(swaggerPath as string)
-                const rl: readline.Interface = readline.createInterface({
-                    input: readStream
-                })
-                const receiver: Receiver = Receiver.instance()
-                rl.on('line', (line: string) => {
-                    try {
-                        receiver.receive(line)
-                    } catch (e) {
-                        reject(e)
-                    }
-                })
-                rl.on('close', () => {
-                    const schemaJson = receiver.getSchemaJson()
-                    const realPath = path.resolve(schemaPath as string, './schema.json')
-                    writeFile(realPath, JSON.stringify(schemaJson))
-                        .then(() => {
-                            const schemaFilePath = path.resolve(schemaPath as string, './schema.json')
-                            success(`${ERROR_PATH}成功创建 schema 文件： ${schemaFilePath}`,)
-                            resolve([
-                                option,
-                                path.resolve(schemaFilePath)
-                            ])
-                        })
-                        .catch((e: Error) => {
-                            reject(e)
-                        })
-                })
-            })
+    return Promise.resolve()
+        .then(() => {
+            return generateSingleSchema(schemaPath!, SCHEMA_FILE_PATH, false)
+        })
+        .then(filePath => {
+            return [option, filePath]
         })
 }
