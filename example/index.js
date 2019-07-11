@@ -5,7 +5,9 @@ const swaggerPath = path.resolve(__dirname, './.swagger')
 const schemaPath = path.resolve(__dirname, '.')
 
 mock({
-    swaggerPath: swaggerPath,
-    schemaPath: schemaPath
+    schemaOption: {
+        schemaPath,
+        swaggerPath
+    }
 })
 

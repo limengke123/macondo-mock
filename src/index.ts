@@ -4,14 +4,35 @@ import { generateData } from './tasks/generateData'
 import { startServer } from './tasks/server'
 import { error } from './util/commonUtil'
 
+/**
+ * schemaOption swagger文本解析的设置
+ * dbOption db上的设置
+ * serverOption 本地服务的设置
+ * */
 export interface option {
-    swaggerPath?: string,
-    schemaPath?: string,
+    schemaOption?: schemaOption
+    dbOption?: dbOption
+    serverOption?: serverOption
+}
+
+export interface schemaOption {
+    schemaPath?: string
+    swaggerPath?: string
+}
+
+export interface dbOption {
+}
+
+export interface serverOption {
     port?: number
 }
 
 const defaultOption: option = {
-    port: 3000
+    schemaOption: {},
+    dbOption: {},
+    serverOption: {
+        port: 3000
+    }
 }
 
 export type optionTuple = [option, any]
