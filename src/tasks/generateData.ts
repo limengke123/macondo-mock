@@ -1,9 +1,8 @@
 import * as path from 'path'
-import { readJsonFile, writeFile, accessFile, access } from '../util/fsUtil'
-import { parse } from '../core/parser'
-import { Ischema } from '../core/resolver'
+import { writeFile, accessFile, access } from '../util/fsUtil'
 import {optionTuple} from '../index'
 import { success } from '../util/commonUtil'
+import { generateSingleData } from '../core/generateSingleData'
 
 const ENTRY = 'Result'
 const ERROR_PATH = '3. 生成db.json： '
@@ -26,16 +25,10 @@ export function generateData ([option, schemaPath]: optionTuple, force: boolean 
     }
     function _generateData(): Promise<optionTuple> {
         return Promise.resolve()
-            .then(() => readJsonFile(schemaPath))
-            .then((schema): any => {
-                if (!schema[ENTRY]) {
-                    throw new Error(ERROR_PATH + '不存在 Result 字段，无法解析')
-                }
-                return parse(schema[ENTRY] as {[key: string]: Ischema}, schema)
-            })
-            .then(result => {
+            .then(() => generateSingleData(schemaPath, ENTRY))
+            .then(([result, name]) => {
                 const data = {
-                    result: result
+                    [name]: result
                 }
                 const writePromise = writeFile(dataPath, JSON.stringify(data))
                 return Promise.all([dataPath, writePromise])
