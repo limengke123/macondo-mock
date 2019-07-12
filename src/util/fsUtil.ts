@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import {rejects} from "assert";
 
 export const writeFile = (path: fs.PathLike, data: string) => {
     return new Promise((resolve, reject) => {
@@ -43,6 +44,28 @@ export const accessFile = (path: fs.PathLike) => {
                 return resolve([true, true])
             }
         })
+    })
+}
+
+export const mkdir = (path: fs.PathLike) => {
+    return new Promise<[boolean, any]>(resolve => {
+        fs.mkdir(path, {recursive: true}, err => {
+            if (err) {
+                return resolve([false, err.message])
+            }
+            return resolve([true, undefined])
+        })
+    })
+}
+
+export const readdir = (path: fs.PathLike) => {
+    return new Promise<string[]>((resolve, reject) => {
+        fs.readdir(path, ((err, files) => {
+            if (err) {
+                reject(err)
+            }
+            resolve(files)
+        }))
     })
 }
 

@@ -1,9 +1,9 @@
+import * as readline from 'readline'
+import * as path from 'path'
+import * as fs from 'fs'
 import {access, accessFile, writeFile} from '../util/fsUtil'
 import {success} from '../util/commonUtil'
-import * as fs from 'fs'
-import * as readline from 'readline'
 import {Receiver} from './resolver'
-import * as path from 'path'
 
 const ERROR_PATH = '2. 生成 schema.json： '
 

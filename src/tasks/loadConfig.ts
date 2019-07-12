@@ -5,7 +5,7 @@ import {success} from '../util/commonUtil'
 
 const ERROR_PATH = '1. 加载 config： '
 
-export function loadConfig (option: option = {}): Promise<optionTuple> {
+export function loadConfig (option: option = {}): Promise<optionTuple<undefined>> {
     const explorer = cosmiconfig(name)
     return explorer.search()
         .then(result => {
@@ -28,6 +28,6 @@ export function loadConfig (option: option = {}): Promise<optionTuple> {
                 throw new Error(ERROR_PATH + '不存在 mockPath 字段')
             }
             success(`${ERROR_PATH} 成功解析配置文件`)
-            return [mergeOption, option]
+            return [mergeOption, undefined]
         })
 }

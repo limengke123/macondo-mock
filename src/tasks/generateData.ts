@@ -3,13 +3,14 @@ import { writeFile, accessFile, access } from '../util/fsUtil'
 import {optionTuple} from '../index'
 import { success } from '../util/commonUtil'
 import { generateSingleData } from '../core/generateSingleData'
+import * as fs from 'fs'
 
 const ENTRY = 'Result'
 const ERROR_PATH = '3. 生成db.json： '
 const DB_JSON_FILE = './db.json'
 
-export function generateData ([option, schemaPath]: optionTuple, force: boolean = false): Promise<optionTuple> {
-    const dataPath = path.resolve(schemaPath, '..', DB_JSON_FILE)
+export function generateData ([option, schemaPath]: optionTuple<fs.PathLike>, force: boolean = false): Promise<optionTuple<fs.PathLike>> {
+    const dataPath = path.resolve(schemaPath as string, '..', DB_JSON_FILE)
     if (!force) {
         return accessFile(DB_JSON_FILE)
             .then(([exists]: access) => {
@@ -23,7 +24,7 @@ export function generateData ([option, schemaPath]: optionTuple, force: boolean 
     } else {
         return _generateData()
     }
-    function _generateData(): Promise<optionTuple> {
+    function _generateData(): Promise<optionTuple<fs.PathLike>> {
         return Promise.resolve()
             .then(() => generateSingleData(schemaPath, ENTRY))
             .then(([result, name]) => {

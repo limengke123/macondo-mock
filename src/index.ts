@@ -44,7 +44,7 @@ const defaultOption: option = {
     }
 }
 
-export type optionTuple = [option, any]
+export type optionTuple<T> = [option, T]
 
 const mock = function (option: option = {}): void {
     Promise.resolve({...defaultOption, ...option})
@@ -58,8 +58,8 @@ const mock = function (option: option = {}): void {
         // 4. 开启本地服务
         .then(startServer)
         .catch((e: Error) => {
-            error(e.message)
-            error(e.stack, false)
+            // error(e.message)
+            error(e.message, true)
             process.exit(-1)
         })
 }

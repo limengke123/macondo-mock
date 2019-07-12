@@ -11,8 +11,7 @@ export const success = (text: string, withTag: boolean = false): void => {
 
 export const error = (text: string = '', withTag: boolean = true): void => {
     if (withTag) {
-        console.log(SPACE, chalk.bgRed.rgb(255, 255, 255)('ERROR'), '\n')
-        console.log('\n')
+        console.log(SPACE, chalk.bgRed.rgb(255, 255, 255)('ERROR'))
     }
     console.log(SPACE, chalk.red(text))
 }
