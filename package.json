@@ -17,7 +17,8 @@
         "build": "tsc",
         "build:watch": "tsc --watch",
         "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-        "preversion": "npm run build && npm run changelog && git add CHANGELOG.md",
+        "clear": "rimraf ./lib",
+        "preversion": "npm run clear && npm run build && npm run changelog && git add CHANGELOG.md",
         "postversion": "npm publish && git push --tags"
     },
     "repository": {
@@ -44,6 +45,7 @@
         "eslint": "^5.16.0",
         "eslint-plugin-typescript": "^0.14.0",
         "jest": "^24.8.0",
+        "rimraf": "^2.6.3",
         "ts-jest": "^24.0.2",
         "typescript": "^3.5.2"
     },
