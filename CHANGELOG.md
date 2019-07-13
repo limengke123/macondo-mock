@@ -1,3 +1,23 @@
+## [1.1.1](https://github.com/limengke123/macondo-mock/compare/v1.1.0...v1.1.1) (2019-07-04)
+
+
+### Bug Fixes
+
+* 修复hooks上的脚本错误 ([382cbb2](https://github.com/limengke123/macondo-mock/commit/382cbb2))
+
+
+### Features
+
+* 修复脚本调用方式，支持独立生成schema文件和独立启动本地mock服务 ([1d219be](https://github.com/limengke123/macondo-mock/commit/1d219be))
+* 减少db.json文件的重复生成(待办) ([1074ffb](https://github.com/limengke123/macondo-mock/commit/1074ffb))
+* 分离内部代码结构，抽离parser ([04145cf](https://github.com/limengke123/macondo-mock/commit/04145cf))
+* 增加package字段 ([00abd8b](https://github.com/limengke123/macondo-mock/commit/00abd8b))
+* 引入 commander ，优化脚本使用方式。 ([0e154f0](https://github.com/limengke123/macondo-mock/commit/0e154f0))
+* 暴露 generateSchema、 generateData、 startServer 出去，方便三方直接调用内部方法。 ([f176381](https://github.com/limengke123/macondo-mock/commit/f176381))
+* 调整打印颜色 ([c61ac23](https://github.com/limengke123/macondo-mock/commit/c61ac23))
+
+
+
 # [1.1.0](https://github.com/limengke123/macondo-mock/compare/2aaf70a...v1.1.0) (2019-07-02)
 
 
