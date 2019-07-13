@@ -8,7 +8,8 @@ import {Ischema} from '../core/resolver'
 const ERROR_PATH = '3. 生成db.json： '
 const DB_JSON_FILE = './db.json'
 
-export function generateData ([option, schemaPaths]: optionTuple<string[]>, force: boolean = true): Promise<optionTuple<string>> {
+export function generateData ([option, schemaPaths]: optionTuple<string[]>, force: boolean = true): Promise<optionTuple<[string, string[]]>> {
+    const schemaNames = schemaPaths.map(schemaFile => path.parse(schemaFile).name)
     const dataPath = path.resolve(option.baseOption!.mockPath!, DB_JSON_FILE)
     if (!force) {
         return accessFile(dataPath)
@@ -17,14 +18,14 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
                     return _generateData()
                 } else {
                     success(`${ERROR_PATH}${dataPath}文件已经存在，跳过生成 db.json 文件步骤`)
-                    return [option, dataPath]
+                    return [option, [dataPath, schemaNames]]
                 }
             })
     } else {
         return _generateData()
     }
     // 生成data数据
-    function _generateData(): Promise<optionTuple<string>> {
+    function _generateData(): Promise<optionTuple<[string, string[]]>> {
         return Promise.resolve()
             .then(() => Promise.all(schemaPaths.map(schemaPath => generateSingleData(schemaPath, path.parse(schemaPath).name))))
             .then((dataList) => {
@@ -39,7 +40,7 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
                 success(`${ERROR_PATH}成功生成数据文件：${dataPath}`,)
                 return [
                     option,
-                    dataPath
+                    [dataPath, schemaNames]
                 ]
             })
     }

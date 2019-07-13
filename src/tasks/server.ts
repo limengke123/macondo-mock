@@ -3,7 +3,7 @@ import { optionTuple } from '../index'
 import { success } from '../util/commonUtil'
 import * as fs from 'fs'
 
-export const startServer = ([option, dataPath]: optionTuple<fs.PathLike>) => {
+export const startServer = ([option, [dataPath, schemaNames]]: optionTuple<[string, string[]]>) => {
     const { serverOption } = option
     const { port } = serverOption!
     const app = jsonServer.create()
@@ -15,5 +15,9 @@ export const startServer = ([option, dataPath]: optionTuple<fs.PathLike>) => {
     app.use(router)
     app.listen(port, () => {
         success(`mock server is start localhost: ${port}`, true)
+        console.log('   you can access those links: ')
+        schemaNames.forEach(name => {
+            success(`http://localhost:${port}/${name}`)
+        })
     })
 }
