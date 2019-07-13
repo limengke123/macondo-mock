@@ -17,8 +17,6 @@ export interface baseOption {
 }
 
 export interface schemaOption {
-    schemaPath?: string
-    swaggerPath?: string,
 }
 
 export interface dbOption {

@@ -18,12 +18,6 @@ export function loadConfig (option: option = {}): Promise<optionTuple<undefined>
             } else {
                 mergeOption = option
             }
-            if (!mergeOption.schemaOption!.schemaPath) {
-                throw new Error(ERROR_PATH + '不存在 schemaPath 字段')
-            }
-            if (!mergeOption.schemaOption!.swaggerPath) {
-                throw new Error(ERROR_PATH + '不存在 swaggerPath 字段')
-            }
             if (!mergeOption.baseOption!.mockPath) {
                 throw new Error(ERROR_PATH + '不存在 mockPath 字段')
             }

@@ -14,9 +14,13 @@ export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[
     return Promise.resolve()
         .then(() => {
             // 尝试去创建一下目录
-            const mkSwaggerDirPromise = mkdir(swaggerDirPath)
-            const mkSchemaDirPromise = mkdir(schemaDirPath)
-            return Promise.all([mkSwaggerDirPromise, mkSchemaDirPromise])
+            return mkdir(mockRealPath)
+                .then(() => {
+                    //  version < 10.12 的node不支持直接创建多级目录，这里先建mock文件夹
+                    const mkSwaggerDirPromise = mkdir(swaggerDirPath)
+                    const mkSchemaDirPromise = mkdir(schemaDirPath)
+                    return Promise.all([mkSwaggerDirPromise, mkSchemaDirPromise])
+                })
         })
         .then(() => {
             // 不管这个文件夹到底有没有创建成功，直接去看里面有没有内容

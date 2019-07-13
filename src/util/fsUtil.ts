@@ -34,7 +34,7 @@ export function readJsonFile<T> (path: fs.PathLike): Promise<T> {
 // [是否存在, 是否可写]
 export type access = [boolean, boolean]
 
-export const accessFile = (path: fs.PathLike) => {
+export const accessFile = (path: fs.PathLike): Promise<access> => {
     return new Promise<access>(resolve => {
         fs.access(path, fs.constants.F_OK | fs.constants.W_OK, (err) => {
             if (err) {
@@ -47,7 +47,9 @@ export const accessFile = (path: fs.PathLike) => {
     })
 }
 
-export const mkdir = (path: fs.PathLike) => {
+export const mkdir = (path: fs.PathLike): Promise<[boolean, string | undefined]> => {
+    // 低版本不支持生成多级目录
+    // node v10.12 才支持recursive功能
     return new Promise<[boolean, any]>(resolve => {
         fs.mkdir(path, {recursive: true}, err => {
             if (err) {
@@ -58,7 +60,7 @@ export const mkdir = (path: fs.PathLike) => {
     })
 }
 
-export const readdir = (path: fs.PathLike) => {
+export const readdir = (path: fs.PathLike): Promise<string[]> => {
     return new Promise<string[]>((resolve, reject) => {
         fs.readdir(path, ((err, files) => {
             if (err) {
