@@ -13,8 +13,8 @@ export const writeFile = (path: fs.PathLike, data: string) => {
     })
 }
 
-export const readJsonFile = (path: fs.PathLike) => {
-    return new Promise<any>((resolve, reject) => {
+export function readJsonFile<T> (path: fs.PathLike): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
         fs.readFile(path, (e, buf) => {
             if (e) {
                 return reject(e)

@@ -6,13 +6,13 @@ import {Ischema} from './resolver'
 const ENTRY = 'Result'
 const ERROR_PATH = '3. 生成db.json： '
 
-export const generateSingleData = function (schemaPath: fs.PathLike, schemaName: string):Promise<[any, string]> {
+export const generateSingleData = function (schemaPath: fs.PathLike, schemaName: string): Promise<[myObject<Ischema>, string]> {
     return Promise.resolve()
-        .then(() => readJsonFile(schemaPath))
-        .then((schema): any => {
+        .then(() => readJsonFile<myObject<myObject<Ischema>>>(schemaPath))
+        .then(schema => {
             if (!schema[ENTRY]) {
-                throw new Error(ERROR_PATH + '不存在 Result 字段，无法解析')
+                throw new Error(ERROR_PATH + schemaName + ' 不存在 Result 字段，无法解析')
             }
-            return [parse(schema[ENTRY] as {[key: string]: Ischema}, schema), schemaName]
+            return [parse(schema[ENTRY], schema), schemaName]
         })
 }

@@ -6,17 +6,20 @@ import {success} from '../util/commonUtil'
 import {Receiver} from './resolver'
 
 const ERROR_PATH = '2. 生成 schema.json： '
+const JSON_EXT = '.json'
 
-export const generateSingleSchema = function (filePath: fs.PathLike, fileName: string, force: boolean) {
-    return accessFile(filePath)
+// 根据swaggerPath，去生成 schema 文件
+export const generateSingleSchema = function (swaggerPath: string, targetPath: string, targetFileName: string, force: boolean = true) {
+    const targetFilePath = path.resolve(targetPath, targetFileName + JSON_EXT)
+    return accessFile(targetFilePath)
         .then(([exists]: access) => {
-            return new Promise<fs.PathLike>((resolve, reject) => {
+            return new Promise<string>((resolve, reject) => {
                 if (exists && !force) {
                     // schema.json 文件存在，跳过生成步骤
-                    success(`${ERROR_PATH}文件 ${fileName} 已经存在，跳过生成 schema.json 文件步骤`)
-                    return resolve(fileName)
+                    success(`${ERROR_PATH}文件 ${targetFilePath} 已经存在，跳过生成 schema.json 文件步骤`)
+                    return resolve(targetFilePath)
                 }
-                const readStream: fs.ReadStream = fs.createReadStream(filePath as string)
+                const readStream: fs.ReadStream = fs.createReadStream(swaggerPath)
                 const rl: readline.Interface = readline.createInterface({
                     input: readStream
                 })
@@ -30,12 +33,10 @@ export const generateSingleSchema = function (filePath: fs.PathLike, fileName: s
                 })
                 rl.on('close', () => {
                     const schemaJson = receiver.getSchemaJson()
-                    const realPath = path.resolve(filePath as string, './schema.json')
-                    writeFile(realPath, JSON.stringify(schemaJson))
+                    writeFile(targetFilePath, JSON.stringify(schemaJson))
                         .then(() => {
-                            const schemaFilePath = path.resolve(filePath as string, fileName)
-                            success(`${ERROR_PATH}成功创建 schema 文件： ${schemaFilePath}`,)
-                            resolve(path.resolve(schemaFilePath))
+                            success(`${ERROR_PATH}成功创建 schema 文件： ${targetFilePath}`,)
+                            resolve(targetFilePath)
                         })
                         .catch((e: Error) => {
                             reject(e)

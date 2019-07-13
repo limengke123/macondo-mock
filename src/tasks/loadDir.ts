@@ -5,7 +5,6 @@ import { mkdir, readdir } from '../util/fsUtil'
 const SWAGGER_PATH = './swagger'
 const SCHEMA_PATH = './schema'
 
-
 export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[string[], string[]]>> {
     const { baseOption } = option
     const { mockPath } = baseOption!
@@ -30,7 +29,13 @@ export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[
                 // 两个文件都没有
                 throw new Error(`${schemaDirPath}目录下没有schema文件，并且${swaggerDirPath}目录下也没有 swagger 文件，尝试在${swaggerDirPath}目录下添加swagger文件之后重试`)
             } else {
-                return [option, [swaggerFiles, schemaFiles]]
+                return [
+                    option,
+                    [
+                        swaggerFiles.map(file => path.join(swaggerDirPath, file)),
+                        schemaFiles.map(file => path.join(schemaDirPath, file))
+                    ]
+                ]
             }
         })
 }

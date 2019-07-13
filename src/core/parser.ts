@@ -3,7 +3,7 @@ import * as Mock from 'mockjs'
 
 const ERROR_PATH = '3. 生成db.json： '
 
-export function parse<T, K extends keyof T>(root: T, source: any): Map<string, Ischema>  {
+export function parse<T, K extends keyof T>(root: T, source: any): myObject<Ischema>  {
     const keys = Object.keys(root) as K[]
     let result = {} as any
     return keys.reduce((accu, currentKey) => {
