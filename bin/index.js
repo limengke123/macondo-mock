@@ -1,7 +1,7 @@
 #! usr/bin/env node
 
 const program = require('commander')
-const { mock, generateSchema, generateData, startServer, loadConfig } = require('../lib/index')
+const { mock, generateSchema, generateData, startServer, loadConfig, loadDir } = require('../lib/index')
 const { version } = require('../package.json')
 
 program
@@ -15,13 +15,15 @@ if (program.open) {
     Promise.resolve()
         .then(loadConfig)
         .then(startServer)
+        .catch(console.log)
 } else if (program.schema || program.data) {
     Promise.resolve()
         .then(loadConfig)
+        .then(loadDir)
         .then(option => {
             if (program.schema) {
                 // 强制生成 schema 文件
-                return generateSchema(option, true)
+                return generateSchema(option)
             }
             return option
         })
@@ -33,6 +35,7 @@ if (program.open) {
         .then(() => {
             console.log('脚本执行完毕')
         })
+        .catch(console.log)
 } else {
     mock()
 }
