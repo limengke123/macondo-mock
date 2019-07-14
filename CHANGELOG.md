@@ -1,3 +1,27 @@
+# [2.0.0](https://github.com/limengke123/macondo-mock/compare/v1.1.1...v2.0.0) (2019-07-13)
+
+
+### Bug Fixes
+
+* 修复低版本node不能创建多层级文件夹的问题 ([c2c6954](https://github.com/limengke123/macondo-mock/commit/c2c6954))
+
+
+### Features
+
+* loadDir功能 ([4061177](https://github.com/limengke123/macondo-mock/commit/4061177))
+* 优化服务启动显示 ([a8fab3d](https://github.com/limengke123/macondo-mock/commit/a8fab3d))
+* 修改跳过步骤文案 ([61285d7](https://github.com/limengke123/macondo-mock/commit/61285d7))
+* 减少db.json文件的重复生成 ([03746e1](https://github.com/limengke123/macondo-mock/commit/03746e1))
+* 加入rimraf 方便构建的时候移除旧的lib目录 ([e5e5d15](https://github.com/limengke123/macondo-mock/commit/e5e5d15))
+* 抽离generateData生成文件，便于批量生成 ([18ba79d](https://github.com/limengke123/macondo-mock/commit/18ba79d))
+* 抽离生成schema文件函数，为批量生成schema.json做准备 ([ca2e8b6](https://github.com/limengke123/macondo-mock/commit/ca2e8b6))
+* 新增mock文件夹的生成 ([6f36410](https://github.com/limengke123/macondo-mock/commit/6f36410))
+* 调整整体解析路口，改为mock文件夹路口去处理 ([43d89bd](https://github.com/limengke123/macondo-mock/commit/43d89bd))
+* 调整文件生成逻辑，支持批量生成接口 ([441355e](https://github.com/limengke123/macondo-mock/commit/441355e))
+* 隔离传参，分组传 ([4fa3b7d](https://github.com/limengke123/macondo-mock/commit/4fa3b7d))
+
+
+
 ## [1.1.1](https://github.com/limengke123/macondo-mock/compare/v1.1.0...v1.1.1) (2019-07-04)
 
 
