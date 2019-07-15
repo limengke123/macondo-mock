@@ -33,7 +33,8 @@ export interface Ischema {
     comment?: string,
     generics?: string,
     mock?: string | {regexp: string},
-    data?: any
+    data?: any,
+    length?: number
 }
 
 export class Resolver {
@@ -78,7 +79,7 @@ export class Resolver {
             return {
                 transformType: 'array',
                 generics: Resolver.resolveArray(type),
-                mock: '@integer(0, 50)'
+                mock: '@integer(0, 10)'
             }
         }
         switch (type) {

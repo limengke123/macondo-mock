@@ -8,7 +8,7 @@ export function parse(root: myObject<Ischema>, source: myObject<myObject<Ischema
     let result: myObject<any> = {}
     return keys.reduce((accu, currentKey) => {
         const schema = root[currentKey]
-        const { type, generics, mock, data } = schema
+        const { type, generics, mock, data, length } = schema
         if (data) {
             // 存在data字段了， 不需要搞别的值了
             accu[currentKey] = data
@@ -17,14 +17,14 @@ export function parse(root: myObject<Ischema>, source: myObject<myObject<Ischema
                 if (!generics) {
                     throw new Error(ERROR_PATH + '数组类型缺少泛型 generics')
                 }
-                const length = getMockData(mock)
+                const arrayLength = length ? length : getMockData(mock)
                 if (source[generics]) {
                     // 其他类型的值
-                    accu[currentKey] = new Array(length).fill(0).map(() => parse(source[generics], source))
+                    accu[currentKey] = new Array(arrayLength).fill(0).map(() => parse(source[generics], source))
                 } else {
                     // 基本类型的值，把数组的名字传进去，拿到匹配的mock
                     const { mock } = Resolver.getType(generics, currentKey)
-                    accu[currentKey] = new Array(length).fill(0).map(() => getMockData(mock))
+                    accu[currentKey] = new Array(arrayLength).fill(0).map(() => getMockData(mock))
                 }
             } else {
                 if (mock) {

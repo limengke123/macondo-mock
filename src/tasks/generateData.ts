@@ -3,7 +3,6 @@ import { writeFile, accessFile, access } from '../util/fsUtil'
 import {optionTuple} from '../index'
 import { success } from '../util/commonUtil'
 import { generateSingleData } from '../core/generateSingleData'
-import {Ischema} from '../core/resolver'
 
 const ERROR_PATH = '3. 生成db.json： '
 const DB_JSON_FILE = './db.json'
