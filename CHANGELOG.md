@@ -1,3 +1,12 @@
+## [2.0.4](https://github.com/limengke123/macondo-mock/compare/v2.0.3...v2.0.4) (2019-07-15)
+
+
+### Features
+
+* 新增swagger 和 schema 文件的diff, 避免重新生成 ([4243306](https://github.com/limengke123/macondo-mock/commit/4243306))
+
+
+
 ## [2.0.3](https://github.com/limengke123/macondo-mock/compare/v2.0.2...v2.0.3) (2019-07-15)
 
 
