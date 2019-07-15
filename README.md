@@ -51,8 +51,6 @@ npx macondo-mock
 
 | fileds | 类型 | 默认值 | 解释 |
 | --- | --- | --- | --- |
-| swaggerPath | string | - | swagger文档的路径 |
-| schemaPath | string | - | schema.json文件生成的路径 |
 
 #### server 配置
 

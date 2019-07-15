@@ -10,6 +10,9 @@
         },
         "schemaOption": {
             "force": false
+        },
+        "dbOption": {
+            "force": false
         }
     }
 }
