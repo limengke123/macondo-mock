@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/limengke123/macondo-mock/compare/v2.0.5...v2.1.0) (2019-07-15)
+
+
+### Features
+
+* dbOption新增force项，控制是否强制生成db.json文件，默认为true ([7841796](https://github.com/limengke123/macondo-mock/commit/7841796))
+* 支持 「pages (Page«WorkOrderDo», optional): 工单列表,」Page字段解析 ([d2cd414](https://github.com/limengke123/macondo-mock/commit/d2cd414))
+* 新增数组类型的长度设定值配置项「length」，同时数组长度默认值修改为 「0-10」条 ([2e628b6](https://github.com/limengke123/macondo-mock/commit/2e628b6))
+* 生成schema文件，支持force配置项，决定是否强制生成schema文件。默认为false ([bc71b08](https://github.com/limengke123/macondo-mock/commit/bc71b08))
+
+
+
 ## [2.0.5](https://github.com/limengke123/macondo-mock/compare/v2.0.4...v2.0.5) (2019-07-15)
 
 
