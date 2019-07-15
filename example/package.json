@@ -7,6 +7,9 @@
         "serverOption": {
             "port": 3002,
             "interfaceName": "[name].json"
+        },
+        "schemaOption": {
+            "force": false
         }
     }
 }
