@@ -1,0 +1,12 @@
+{
+    "name": "example",
+    "version": "1.0.0",
+    "dependencies": {
+    },
+    "macondo-mock": {
+        "serverOption": {
+            "port": 3002,
+            "interfaceName": "[name].json"
+        }
+    }
+}
