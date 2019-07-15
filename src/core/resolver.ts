@@ -3,7 +3,7 @@ import {Result} from 'range-parser'
 // swagger文档的解析正则
 const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
 const rightBrace: RegExp = /.*}.*/g
-const bodyReg: RegExp = /^\s*(\w+)\s*\(([\[\]\w]+),?\s*(\w+)?\):?(.+)?/g
+const bodyReg: RegExp = /^\s*(\w+)\s*\(([«»\][\w]+),?\s*(\w+)?\):?(.+)?/g
 const arrReg: RegExp = /array\[(\w+)]$/g
 // 字段修饰正则，去推测字段名对应的 mock 类型
 const timeReg: RegExp = /\w*(?:[dD]ate)|(?:[tT]ime)\w*/
@@ -161,9 +161,7 @@ export class Receiver {
     header: string = ''
     result: Iresult = {}
 
-    receive (line: string): never | Receiver {
-        // console.log(leftBrace.test('Result«WorkOrderView» {'))
-        // console.log(rightBrace.test('}'))
+    receive (line: string): never | this {
         if (leftBrace.test(line)) {
             // 遇到了 {
             if (this.offset !== 0) {
