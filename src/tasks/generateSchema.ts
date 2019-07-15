@@ -23,6 +23,7 @@ export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTup
             return Promise.all(batchGenerateSchemaPromise)
         })
         .then(schemaFilePaths => {
-            return [option, schemaFilePaths]
+            // 合并去重一下读取的schemaFiles和生成的schemaFiles
+            return [option, Array.from(new Set<string>([...schemaFilePaths, ...schemaFiles]))]
         })
 }
