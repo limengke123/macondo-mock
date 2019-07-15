@@ -1,4 +1,4 @@
-#! usr/bin/env node
+#!/usr/bin/env node
 
 const program = require('commander')
 const { mock, generateSchema, generateData, startServer, loadConfig, loadDir } = require('../lib/index')
