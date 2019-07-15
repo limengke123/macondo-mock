@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/limengke123/macondo-mock/compare/v2.0.0...v2.0.1) (2019-07-14)
+
+
+### Features
+
+* **bin:** 修改bin ([c66f2af](https://github.com/limengke123/macondo-mock/commit/c66f2af))
+
+
+
 # [2.0.0](https://github.com/limengke123/macondo-mock/compare/v1.1.1...v2.0.0) (2019-07-13)
 
 
