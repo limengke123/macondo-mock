@@ -15,6 +15,9 @@ export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTup
                 // 非强制生成，对swaggerFiles和schemaFiles做一次diff，找出有差异的文件
                 patches = diff(swaggerFiles, schemaFiles, ((a, b) => path.parse(a).name === path.parse(b).name))
             }
+            if (patches.length === 0) {
+                success(`${ERROR_PATH} 跳过生成 schema 文件步骤`)
+            }
             // 强制生成，那就全量处理swagger文件
             const batchGenerateSchemaPromise = patches.map(swaggerFile => {
                 const absoluteSchemaPath = path.join(process.cwd(), mockDir, './schema')
