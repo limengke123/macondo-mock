@@ -1,4 +1,8 @@
 const { mock } = require('../lib/index.js')
 
-mock()
+mock({
+    serverOption: {
+        port: 3001
+    }
+})
 
