@@ -115,8 +115,8 @@
             "comment": "",
             "optional": true,
             "mock": "@integer(0, 50)",
-            "length": 5,
-            "generics": "WorkOrderDo"
+            "generics": "WorkOrderDo",
+            "length": 5
         }
     },
     "WorkOrderDo": {
@@ -399,8 +399,8 @@
             "comment": " 回复列表,",
             "optional": true,
             "mock": "@integer(0, 50)",
-            "length": 5,
-            "generics": "FeedbackDo"
+            "generics": "FeedbackDo",
+            "length": 5
         },
         "leaseConsiceOrderView": {
             "type": "LeaseConsiceOrderView",
@@ -623,9 +623,9 @@
             "type": "array",
             "comment": "",
             "optional": true,
-            "length": 5,
             "mock": "@integer(0, 50)",
-            "generics": "string"
+            "generics": "string",
+            "length": 5
         }
     },
     "LeaseConsiceOrderView": {
