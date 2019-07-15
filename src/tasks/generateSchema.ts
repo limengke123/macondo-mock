@@ -1,21 +1,21 @@
 import * as path from 'path'
 import { generateSingleSchema } from '../core/generateSingleSchema'
 import { optionTuple } from '../index'
-import {success} from '../util/commonUtil'
+import {diff, success} from '../util/commonUtil'
 
 const ERROR_PATH = '2. 生成 schema.json： '
 
-export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTuple<[string[], string[]]>): Promise<optionTuple<string[]>> {
+export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTuple<[string[], string[]]>, force: boolean = false): Promise<optionTuple<string[]>> {
     const mockDir = option.baseOption!.mockPath!
     return Promise.resolve()
         .then(() => {
-            // todo: 这里先强制生成scehma文件， 后续优化
-            // if (schemaFiles.length && schemaFiles.length === swaggerFiles.length) {
-            //     // 这里先偷个懒，判断swagger和schema的长度，长度相同就不去生成schema todo: 后期优化需要依据name去辨别
-            //     success(`${ERROR_PATH} 跳过生成 schema.json 文件步骤`)
-            //     return schemaFiles
-            // }
-            const batchGenerateSchemaPromise = swaggerFiles.map(swaggerFile => {
+            let patches = swaggerFiles
+            if (!force) {
+                // 非强制生成，对swaggerFiles和schemaFiles做一次diff，找出有差异的文件
+                patches = diff(swaggerFiles, schemaFiles, ((a, b) => path.parse(a).name === path.parse(b).name))
+            }
+            // 强制生成，那就全量处理swagger文件
+            const batchGenerateSchemaPromise = patches.map(swaggerFile => {
                 const absoluteSchemaPath = path.join(process.cwd(), mockDir, './schema')
                 const fileName = path.parse(swaggerFile).name
                 return generateSingleSchema(swaggerFile, absoluteSchemaPath, fileName)
