@@ -25,9 +25,7 @@ export interface Iline {
     comment?: string
 }
 
-export interface Iresult {
-    [name: string]: Iline[]
-}
+export type Iresult = myObject<Iline[]>
 
 export interface Ischema {
     type?: string,

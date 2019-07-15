@@ -3,11 +3,11 @@ import * as Mock from 'mockjs'
 
 const ERROR_PATH = '3. 生成db.json： '
 
-export function parse<T, K extends keyof T>(root: T, source: any): myObject<Ischema>  {
-    const keys = Object.keys(root) as K[]
-    let result = {} as any
+export function parse(root: myObject<Ischema>, source: myObject<myObject<Ischema>>): myObject<any>  {
+    const keys = Object.keys(root)
+    let result: myObject<any> = {}
     return keys.reduce((accu, currentKey) => {
-        const schema = root[currentKey] as Ischema
+        const schema = root[currentKey]
         const { type, generics, mock, data } = schema
         if (data) {
             // 存在data字段了， 不需要搞别的值了
@@ -23,7 +23,7 @@ export function parse<T, K extends keyof T>(root: T, source: any): myObject<Isch
                     accu[currentKey] = new Array(length).fill(0).map(() => parse(source[generics], source))
                 } else {
                     // 基本类型的值，把数组的名字传进去，拿到匹配的mock
-                    const { mock } = Resolver.getType(generics, currentKey as string)
+                    const { mock } = Resolver.getType(generics, currentKey)
                     accu[currentKey] = new Array(length).fill(0).map(() => getMockData(mock))
                 }
             } else {

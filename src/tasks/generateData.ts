@@ -38,7 +38,7 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
         return Promise.resolve()
             .then(() => Promise.all(schemaPaths.map(schemaPath => generateSingleData(schemaPath, path.parse(schemaPath).name))))
             .then((dataList) => {
-                let data: myObject<myObject<Ischema>> = {}
+                let data: myObject<myObject<any>> = {}
                 dataList.forEach(([result, name]) => {
                     let keyName = name
                     if (option.serverOption!.interfaceName) {
