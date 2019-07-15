@@ -5,8 +5,9 @@ import {diff, success} from '../util/commonUtil'
 
 const ERROR_PATH = '2. 生成 schema.json： '
 
-export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTuple<[string[], string[]]>, force: boolean = false): Promise<optionTuple<string[]>> {
+export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTuple<[string[], string[]]>): Promise<optionTuple<string[]>> {
     const mockDir = option.baseOption!.mockPath!
+    const force = option.schemaOption!.force
     return Promise.resolve()
         .then(() => {
             let patches = swaggerFiles

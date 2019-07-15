@@ -17,6 +17,7 @@ export interface baseOption {
 }
 
 export interface schemaOption {
+    force?: boolean
 }
 
 export interface dbOption {
@@ -31,7 +32,9 @@ const defaultOption: option = {
     baseOption: {
         mockPath: './mock'
     },
-    schemaOption: {},
+    schemaOption: {
+        force: false
+    },
     dbOption: {},
     serverOption: {
         port: 3000
