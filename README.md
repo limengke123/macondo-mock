@@ -60,6 +60,29 @@ npx macondo-mock
 | --- | --- | --- | --- |
 | 端口 | number | 3000 | 本地服务的端口号 |
 
+## schema 字段解释
+
+schema文件夹下的文件是生成最后的 db.json 的规则：
+
+| 字段 | 解释 |
+| --- | --- |
+| type | 类型 |
+| comment | swagger文档中的注释 |
+| optional | 字段值是否可选 |
+| mock | 需要mock出来的数据类型, 如果type是array类型，mock返回值是数组长度 |
+| data | 如果指定了data值，就直接忽略mock项生成的值 |
+| generics | type是array的话，generics是数组子项的数据类型 |
+
+其中mock项还可以传入一个对象，传入正则(正则内容需要转义)生成假数据：
+
+```json
+{
+    "mock": {
+        "regexp": "\\d{11}"
+    }
+}
+```
+
 
 ## 获取 mock 类型
 
