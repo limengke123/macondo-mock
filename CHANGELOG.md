@@ -1,3 +1,17 @@
+## [2.0.2](https://github.com/limengke123/macondo-mock/compare/v2.0.1...v2.0.2) (2019-07-15)
+
+
+### Bug Fixes
+
+* 修复bin文件取不到node的问题 ([df91c01](https://github.com/limengke123/macondo-mock/commit/df91c01))
+
+
+### Features
+
+* 放开生成，每次都去重新生成schema文件 ([b2b32ff](https://github.com/limengke123/macondo-mock/commit/b2b32ff))
+
+
+
 ## [2.0.1](https://github.com/limengke123/macondo-mock/compare/v2.0.0...v2.0.1) (2019-07-14)
 
 
