@@ -11,11 +11,39 @@
 3. 在离线环境、网络不稳定的情况下方便调试。
 
 ## 使用
-pass
+
+### 安装
+
+可在项目中安装，也可全局安装，推荐项目内部安装。
+
+```bash
+yarn add macondo-mock
+```
+
+### 用法
+
+如果全局安装，进入到项目，终端运行 `macondo-mock`，在项目内使用可以在package.json中加入一个scripts：
+```json
+{
+    "scripts": {
+        "mock": "macondo-mock"
+    }
+}
+```
+
+也可以免安装使用，支持 `npx` 的环境可直接在项目路径下：
+
+```bash
+npx macondo-mock
+```
+
+默认会在项目中生成一个mock目录，里面包含 swagger、schema 文件夹，并且提示缺少必要文件错误，在swagger文件夹中加入复制出来的swagger文档，如`userInfo.sg`。
+再次调用脚本，就能自动生成schema文件以及db.json文件。访问 `http://localhost:3000/userInfo` 就能调用接口，注意这里的接口命名是根据swagger文件名来命名的。
 
 ## 配置化
 
 `macondo-mock` 是高度可配置化，如同`babel`、`typescript`、`jest` 的配置文件一样，可以在 `package.json` 中加入 `"macondo-mock"` 字段，或者是新建 `macondo-mockrc.yaml`、`macondo-mockrc.yml`、`macondo-mockrc.json`、`macondo-mockrc.js`、`macondo-mock.config.js` 写入配置项。
+同时包含了默认设置，可做到开箱即用。
 
 ### 配置项
 
