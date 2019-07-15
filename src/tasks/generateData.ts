@@ -7,7 +7,7 @@ import { generateSingleData } from '../core/generateSingleData'
 const ERROR_PATH = '3. 生成db.json： '
 const DB_JSON_FILE = './db.json'
 
-export function generateData ([option, schemaPaths]: optionTuple<string[]>, force: boolean = true): Promise<optionTuple<[string, string[]]>> {
+export function generateData ([option, schemaPaths]: optionTuple<string[]>): Promise<optionTuple<[string, string[]]>> {
     const schemaNames = schemaPaths.map(schemaFile => path.parse(schemaFile).name)
     const keyNames = schemaNames.map(name => {
         let keyName = name
@@ -19,13 +19,14 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
         return keyName
     })
     const dataPath = path.resolve(option.baseOption!.mockPath!, DB_JSON_FILE)
+    const force = option.dbOption!.force
     if (!force) {
         return accessFile(dataPath)
             .then(([exists]: access) => {
                 if (!exists) {
                     return _generateData()
                 } else {
-                    success(`${ERROR_PATH}${dataPath}文件已经存在，跳过生成 db.json 文件步骤`)
+                    success(`${ERROR_PATH} 跳过生成 db.json 文件步骤`)
                     return [option, [dataPath, keyNames]]
                 }
             })

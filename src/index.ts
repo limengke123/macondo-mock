@@ -21,6 +21,7 @@ export interface schemaOption {
 }
 
 export interface dbOption {
+    force?: boolean
 }
 
 export interface serverOption {
@@ -35,7 +36,9 @@ const defaultOption: option = {
     schemaOption: {
         force: false
     },
-    dbOption: {},
+    dbOption: {
+        force: true
+    },
     serverOption: {
         port: 3000
     }
