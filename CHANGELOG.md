@@ -1,3 +1,12 @@
+## [2.0.3](https://github.com/limengke123/macondo-mock/compare/v2.0.2...v2.0.3) (2019-07-15)
+
+
+### Bug Fixes
+
+* 修复schema文件的处理问题，同时处理新生成的schema和原有的文件 ([2de4388](https://github.com/limengke123/macondo-mock/commit/2de4388))
+
+
+
 ## [2.0.2](https://github.com/limengke123/macondo-mock/compare/v2.0.1...v2.0.2) (2019-07-15)
 
 
