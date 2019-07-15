@@ -23,7 +23,8 @@ export interface dbOption {
 }
 
 export interface serverOption {
-    port?: number
+    port?: number,
+    interfaceName?: string
 }
 
 const defaultOption: option = {

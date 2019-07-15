@@ -12,8 +12,8 @@ export function loadConfig (option: option = {}): Promise<optionTuple<undefined>
             let mergeOption: option = {}
             if (result) {
                 mergeOption = {
-                    ...result.config,
-                    ...option
+                    ...option,
+                    ...result.config
                 }
             } else {
                 mergeOption = option

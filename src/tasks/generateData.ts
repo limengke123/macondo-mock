@@ -10,6 +10,15 @@ const DB_JSON_FILE = './db.json'
 
 export function generateData ([option, schemaPaths]: optionTuple<string[]>, force: boolean = true): Promise<optionTuple<[string, string[]]>> {
     const schemaNames = schemaPaths.map(schemaFile => path.parse(schemaFile).name)
+    const keyNames = schemaNames.map(name => {
+        let keyName = name
+        if (option.serverOption!.interfaceName) {
+            keyName = option.serverOption!.interfaceName.replace(/\[(name)]/g, () => {
+                return name
+            })
+        }
+        return keyName
+    })
     const dataPath = path.resolve(option.baseOption!.mockPath!, DB_JSON_FILE)
     if (!force) {
         return accessFile(dataPath)
@@ -18,7 +27,7 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
                     return _generateData()
                 } else {
                     success(`${ERROR_PATH}${dataPath}文件已经存在，跳过生成 db.json 文件步骤`)
-                    return [option, [dataPath, schemaNames]]
+                    return [option, [dataPath, keyNames]]
                 }
             })
     } else {
@@ -31,7 +40,13 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
             .then((dataList) => {
                 let data: myObject<myObject<Ischema>> = {}
                 dataList.forEach(([result, name]) => {
-                    data[name] = result
+                    let keyName = name
+                    if (option.serverOption!.interfaceName) {
+                        keyName = option.serverOption!.interfaceName.replace(/\[(name)]/g, () => {
+                            return name
+                        })
+                    }
+                    data[keyName] = result
                 })
                 const writePromise = writeFile(dataPath, JSON.stringify(data))
                 return Promise.all([dataPath, writePromise])
@@ -40,7 +55,7 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>, forc
                 success(`${ERROR_PATH}成功生成数据文件：${dataPath}`,)
                 return [
                     option,
-                    [dataPath, schemaNames]
+                    [dataPath, keyNames]
                 ]
             })
     }
