@@ -12,7 +12,7 @@
             "force": false
         },
         "dbOption": {
-            "force": false
+            "force": true
         }
     }
 }

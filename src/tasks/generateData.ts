@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { writeFile, accessFile, access } from '../util/fsUtil'
+import {writeFile, accessFile, access, extractRelativePath} from '../util/fsUtil'
 import {optionTuple} from '../index'
 import { success } from '../util/commonUtil'
 import { generateSingleData } from '../core/generateSingleData'
@@ -7,16 +7,24 @@ import { generateSingleData } from '../core/generateSingleData'
 const ERROR_PATH = '3. 生成db.json： '
 const DB_JSON_FILE = './db.json'
 
+// /search/rule/hhh.json -> search@rule@hhh
+function generateKeyName(schemaPath: string, interfaceName?:string, separator: string = '@'): string {
+    const pathArr = schemaPath.replace(/\/([a-z0-9/]*)\.json/, (_, a) => {
+        return a
+    }).split('/')
+    let fileName = pathArr[pathArr.length - 1]
+    let pathName = pathArr.slice(0, pathArr.length - 1)
+    if (interfaceName) {
+        fileName = interfaceName.replace(/\[(name)]/g, () => {
+            return fileName
+        })
+    }
+    return pathName.concat(fileName).join(separator)
+}
+
 export function generateData ([option, schemaPaths]: optionTuple<string[]>): Promise<optionTuple<[string, string[]]>> {
-    const schemaNames = schemaPaths.map(schemaFile => path.parse(schemaFile).name)
-    const keyNames = schemaNames.map(name => {
-        let keyName = name
-        if (option.serverOption!.interfaceName) {
-            keyName = option.serverOption!.interfaceName.replace(/\[(name)]/g, () => {
-                return name
-            })
-        }
-        return keyName
+    const keyNames = schemaPaths.map(schemaPath => {
+        return generateKeyName(extractRelativePath(schemaPath, '/schema'), option.serverOption!.interfaceName, '/')
     })
     const dataPath = path.resolve(option.baseOption!.mockPath!, DB_JSON_FILE)
     const force = option.dbOption!.force
@@ -36,16 +44,15 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>): Pro
     // 生成data数据
     function _generateData(): Promise<optionTuple<[string, string[]]>> {
         return Promise.resolve()
-            .then(() => Promise.all(schemaPaths.map(schemaPath => generateSingleData(schemaPath, path.parse(schemaPath).name))))
+            .then(() => {
+                return Promise.all(schemaPaths.map(schemaPath => {
+                    return generateSingleData(schemaPath, extractRelativePath(schemaPath, '/schema'))
+                }))
+            })
             .then((dataList) => {
                 let data: myObject<myObject<any>> = {}
                 dataList.forEach(([result, name]) => {
-                    let keyName = name
-                    if (option.serverOption!.interfaceName) {
-                        keyName = option.serverOption!.interfaceName.replace(/\[(name)]/g, () => {
-                            return name
-                        })
-                    }
+                    const keyName = generateKeyName(name, option.serverOption!.interfaceName, '@')
                     data[keyName] = result
                 })
                 const writePromise = writeFile(dataPath, JSON.stringify(data))

@@ -1,16 +1,9 @@
+import * as path from 'path'
 import * as fs from 'fs'
-import {rejects} from "assert";
+import * as fse from 'fs-extra'
 
-export const writeFile = (path: fs.PathLike, data: string) => {
-    return new Promise((resolve, reject) => {
-        fs.writeFile(path, data, e => {
-            if (e) {
-                return reject(e)
-            } else {
-                resolve('success')
-            }
-        })
-    })
+export const writeFile = (path: string, data: string) => {
+    return fse.outputFile(path, data)
 }
 
 export function readJsonFile<T> (path: fs.PathLike): Promise<T> {
@@ -60,21 +53,37 @@ export const mkdir = (path: fs.PathLike): Promise<[boolean, string | undefined]>
     })
 }
 
-export const readdir = (path: fs.PathLike): Promise<string[]> => {
-    return new Promise<string[]>((resolve, reject) => {
-        fs.readdir(path, ((err, files) => {
+export const readdir = (dir: string): Promise<string[]> => {
+    return new Promise((resolve, reject) => {
+        fs.readdir(dir, (err, files) => {
             if (err) {
                 reject(err)
             }
             resolve(files)
-        }))
+        })
     })
+}
+
+export const listDir = (dirPath: string): Promise<string[]> => {
+    if (fsStats(dirPath).isDirectory()) {
+        return readdir(dirPath)
+            .then(list => {
+                return Promise.all(list.map(item => listDir(path.resolve(dirPath, item))))
+            })
+            .then((subTree: string[][]) => {
+                // @ts-ignore
+                return [].concat(...subTree)
+            })
+    }
+    return Promise.resolve([dirPath])
 }
 
 export const fsStats = (path: fs.PathLike): fs.Stats => {
     return fs.statSync(path)
 }
 
-export const isDictory = (path: fs.PathLike): boolean => {
-    return fsStats(path).isDirectory()
+
+export const extractRelativePath = (source: string, separator: '/schema' | '/swagger') : string => {
+    const paths =  source.split(separator)
+    return paths[paths.length - 1]
 }

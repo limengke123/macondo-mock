@@ -1,6 +1,6 @@
 import * as path from 'path'
 import {optionTuple} from '../index'
-import { mkdir, readdir } from '../util/fsUtil'
+import {listDir, mkdir, readdir} from '../util/fsUtil'
 
 const SWAGGER_PATH = './swagger'
 const SCHEMA_PATH = './schema'
@@ -24,8 +24,8 @@ export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[
         })
         .then(() => {
             // 不管这个文件夹到底有没有创建成功，直接去看里面有没有内容
-            const swaggerFilePromise = readdir(swaggerDirPath)
-            const schemaFilePromise = readdir(schemaDirPath)
+            const swaggerFilePromise = listDir(swaggerDirPath)
+            const schemaFilePromise = listDir(schemaDirPath)
             return Promise.all([swaggerFilePromise, schemaFilePromise])
         })
         .then(([swaggerFiles, schemaFiles]) => {
@@ -36,8 +36,8 @@ export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[
                 return [
                     option,
                     [
-                        swaggerFiles.map(file => path.join(swaggerDirPath, file)),
-                        schemaFiles.map(file => path.join(schemaDirPath, file))
+                        swaggerFiles,
+                        schemaFiles
                     ]
                 ]
             }
