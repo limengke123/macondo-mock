@@ -29,7 +29,7 @@ export interface serverOption {
     interfaceName?: string
 }
 
-const defaultOption: option = {
+export const defaultOption: option = {
     baseOption: {
         mockPath: './mock'
     },
