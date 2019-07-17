@@ -1,7 +1,6 @@
 import * as jsonServer from 'json-server'
 import { optionTuple } from '../index'
 import { success } from '../util/commonUtil'
-import * as fs from 'fs'
 
 export const startServer = ([option, [dataPath, schemaNames]]: optionTuple<[string, string[]]>) => {
     const { serverOption } = option
@@ -12,6 +11,18 @@ export const startServer = ([option, [dataPath, schemaNames]]: optionTuple<[stri
 
     app.use(middleware)
     app.use(jsonServer.bodyParser)
+    app.use(jsonServer.rewriter({
+        '/*/*/*/*/*/*/*/*/*/*':'/$1@$2@$3@$4@$5@$6@$7@$8@$9@$10',
+        '/*/*/*/*/*/*/*/*/*':'/$1@$2@$3@$4@$5@$6@$7@$8@$9',
+        '/*/*/*/*/*/*/*/*':'/$1@$2@$3@$4@$5@$6@$7@$8',
+        '/*/*/*/*/*/*/*':'/$1@$2@$3@$4@$5@$6@$7',
+        '/*/*/*/*/*/*':'/$1@$2@$3@$4@$5@$6',
+        '/*/*/*/*/*':'/$1@$2@$3@$4@$5',
+        '/*/*/*/*':'/$1@$2@$3@$4',
+        '/*/*/*':'/$1@$2@$3',
+        '/*/*':'/$1@$2',
+        '/*':'/$1',
+    }))
     app.use(router)
     app.listen(port, () => {
         success(`mock server is start localhost: ${port}`, true)
