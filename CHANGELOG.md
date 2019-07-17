@@ -1,3 +1,18 @@
+# [2.2.0](https://github.com/limengke123/macondo-mock/compare/v2.1.0...v2.2.0) (2019-07-17)
+
+
+### Bug Fixes
+
+* 修复默认port失效问题 ([d95b67e](https://github.com/limengke123/macondo-mock/commit/d95b67e))
+
+
+### Features
+
+* server支持多级目录重定向 ([4bc8d69](https://github.com/limengke123/macondo-mock/commit/4bc8d69))
+* 支持多级目录查询 ([1794346](https://github.com/limengke123/macondo-mock/commit/1794346))
+
+
+
 # [2.1.0](https://github.com/limengke123/macondo-mock/compare/v2.0.5...v2.1.0) (2019-07-15)
 
 
