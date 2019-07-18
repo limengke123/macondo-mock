@@ -10,10 +10,17 @@
         },
         "schemaOption": {
             "force": true,
-            "surmise": {
-                "test": "success",
-                "data": true
-            }
+            "surmise": [
+                {
+                    "test": "success",
+                    "data": true
+                },
+                {
+                    "test": "items",
+                    "length": 8,
+                    "mock": "@integer(1, 20)"
+                }
+            ]
         },
         "dbOption": {
             "force": true

@@ -71,7 +71,8 @@
             "type": "array",
             "comment": "",
             "optional": true,
-            "mock": "@integer(0, 10)",
+            "mock": "@integer(1, 20)",
+            "length": 8,
             "generics": "WorkOrderView"
         }
     },
