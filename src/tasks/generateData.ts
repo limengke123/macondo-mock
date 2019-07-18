@@ -9,7 +9,7 @@ const DB_JSON_FILE = './db.json'
 
 // /search/rule/hhh.json -> search@rule@hhh
 function generateKeyName(schemaPath: string, interfaceName?:string, separator: string = '@'): string {
-    const pathArr = schemaPath.replace(/\/([a-z0-9/]*)\.json/, (_, a) => {
+    const pathArr = schemaPath.replace(/\/([\w/]*)\.json/, (_, a) => {
         return a
     }).split('/')
     let fileName = pathArr[pathArr.length - 1]
@@ -24,7 +24,8 @@ function generateKeyName(schemaPath: string, interfaceName?:string, separator: s
 
 export function generateData ([option, schemaPaths]: optionTuple<string[]>): Promise<optionTuple<[string, string[]]>> {
     const keyNames = schemaPaths.map(schemaPath => {
-        return generateKeyName(extractRelativePath(schemaPath, '/schema'), option.serverOption!.interfaceName, '/')
+        const a =  generateKeyName(extractRelativePath(schemaPath, '/schema'), option.serverOption!.interfaceName, '/')
+        return a
     })
     const dataPath = path.resolve(option.baseOption!.mockPath!, DB_JSON_FILE)
     const force = option.dbOption!.force
