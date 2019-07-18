@@ -10,6 +10,9 @@
         },
         "schemaOption": {
             "force": true,
+            "global": {
+                "string": "@sentence"
+            },
             "surmise": [
                 {
                     "test": "success",
@@ -17,7 +20,6 @@
                 },
                 {
                     "test": "items",
-                    "length": 8,
                     "mock": "@integer(1, 20)"
                 }
             ]
