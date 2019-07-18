@@ -1,4 +1,5 @@
 import {Result} from 'range-parser'
+import {option} from '../index'
 
 // swagger文档的解析正则
 const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
@@ -44,7 +45,7 @@ export class Resolver {
         this.source = source
     }
 
-    generate (): never | void {
+    generate (option: option): never | void {
         if (!this.source[RESULT]) {
             throw new Error(`不存在${RESULT}字段，无法解析`)
         }
@@ -56,7 +57,7 @@ export class Resolver {
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, generics, mock} = Resolver.getType(type || '', name)
+                const {transformType, generics, mock, data} = Resolver.getType(type || '', name, option)
                 accu[name] = {
                     type: transformType,
                     comment,
@@ -64,6 +65,9 @@ export class Resolver {
                 }
                 if (mock) {
                     accu[name].mock = mock
+                }
+                if (data) {
+                    accu[name].data = data
                 }
                 if (transformType === 'array') {
                     accu[name].generics = generics
@@ -73,9 +77,27 @@ export class Resolver {
         })
     }
 
-    static getType (type: string, name?: string): {transformType: string, generics?: string, mock?: string | {regexp: string} } {
-        let result: {transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
-        if (arrReg.test(type)) {
+    static getType (type: string, name?: string, option?: option): {data?: any, transformType: string, generics?: string, mock?: string | {regexp: string} } {
+        let result: {data?: any, transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
+        let hadHandleByConfig = false
+        if (option && option.schemaOption!.surmise && name) {
+            const surmises = Array.isArray(option.schemaOption!.surmise)
+                ? option.schemaOption!.surmise
+                : [option.schemaOption!.surmise]
+            surmises.forEach(surmise => {
+                const regexp = new RegExp(surmise.test)
+                if (regexp.test(name)) {
+                    hadHandleByConfig = true
+                    if (surmise.mock) {
+                        result.mock = surmise.mock
+                    }
+                    if (surmise.data) {
+                        result.data = surmise.data
+                    }
+                }
+            })
+        }
+        if (!hadHandleByConfig && arrReg.test(type)) {
             return {
                 transformType: 'array',
                 generics: Resolver.resolveArray(type),
@@ -84,17 +106,25 @@ export class Resolver {
         }
         switch (type) {
         case 'string':
-            result.mock = Resolver.handleStringMock(name)
+            if (!hadHandleByConfig) {
+                result.mock = Resolver.handleStringMock(name)
+            }
             break
         case 'integer':
             result.transformType = 'number'
-            result.mock = Resolver.handleNumberMock(name)
+            if (!hadHandleByConfig) {
+                result.mock = Resolver.handleNumberMock(name)
+            }
             break
         case 'number':
-            result.mock = Resolver.handleNumberMock(name)
+            if (!hadHandleByConfig) {
+                result.mock = Resolver.handleNumberMock(name)
+            }
             break
         case 'boolean':
-            result.mock = '@boolean'
+            if (!hadHandleByConfig) {
+                result.mock = '@boolean'
+            }
             break
         default:
             break
@@ -149,6 +179,7 @@ export class Resolver {
         })
         return result
     }
+
 
     getSchemaJson (): {[propName: string]: Ischema} {
         return this.schemaJson
@@ -215,10 +246,10 @@ export class Receiver {
         return lineResult
     }
 
-    getSchemaJson (): {[propName: string]: Ischema} {
+    getSchemaJson (option: option): {[propName: string]: Ischema} {
         const resolver = new Resolver(this.result)
         try {
-            resolver.generate()
+            resolver.generate(option)
         } catch (e) {
             console.log(e.message)
             process.exit(1)

@@ -31,7 +31,7 @@ export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTup
                 const fileName = path.parse(swaggerFile).name
                 const relativePath = path.parse(extractRelativePath(swaggerFile, '/swagger')).dir
                 const absoluteSchemaPath = path.join(process.cwd(), mockDir, './schema', relativePath)
-                return generateSingleSchema(swaggerFile, absoluteSchemaPath, fileName)
+                return generateSingleSchema(option, swaggerFile, absoluteSchemaPath, fileName)
             })
             return Promise.all(batchGenerateSchemaPromise)
         })

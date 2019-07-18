@@ -24,8 +24,7 @@ function generateKeyName(schemaPath: string, interfaceName?:string, separator: s
 
 export function generateData ([option, schemaPaths]: optionTuple<string[]>): Promise<optionTuple<[string, string[]]>> {
     const keyNames = schemaPaths.map(schemaPath => {
-        const a =  generateKeyName(extractRelativePath(schemaPath, '/schema'), option.serverOption!.interfaceName, '/')
-        return a
+        return generateKeyName(extractRelativePath(schemaPath, '/schema'), option.serverOption!.interfaceName, '/')
     })
     const dataPath = path.resolve(option.baseOption!.mockPath!, DB_JSON_FILE)
     const force = option.dbOption!.force

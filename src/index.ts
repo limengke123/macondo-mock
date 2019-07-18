@@ -16,8 +16,17 @@ export interface baseOption {
     mockPath?: string
 }
 
+export interface Isurmise {
+    test: string
+    mock?: string | {regexp: string}
+    data?: string
+}
+
 export interface schemaOption {
-    force?: boolean
+    // 是否强制生成 schema 文件
+    force?: boolean,
+    // 推断类型
+    surmise?: Array<Isurmise> | Isurmise
 }
 
 export interface dbOption {
