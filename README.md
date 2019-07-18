@@ -22,7 +22,7 @@ yarn add macondo-mock
 
 ### 用法
 
-如果全局安装，进入到项目，终端运行 `macondo-mock`，在项目内使用可以在package.json中加入一个scripts：
+如果全局安装，进入到项目，终端运行 `macondo-mock`，在项目内使用可以在 `package.json` 中加入一个 `scripts` ：
 ```json
 {
     "scripts": {
@@ -37,8 +37,18 @@ yarn add macondo-mock
 npx macondo-mock
 ```
 
-默认会在项目中生成一个mock目录，里面包含 swagger、schema 文件夹，并且提示缺少必要文件错误，在swagger文件夹中加入复制出来的swagger文档，如`userInfo.sg`。
-再次调用脚本，就能自动生成schema文件以及db.json文件。访问 `http://localhost:3000/userInfo` 就能调用接口，注意这里的接口命名是根据swagger文件名来命名的。
+默认会在项目中生成一个 `mock` 目录，里面包含 `swagger`、`schema` 文件夹，并且提示缺少必要文件错误，在 `swagger` 文件夹中加入复制出来的 `swagger` 文档，如`userInfo.sg`。
+再次调用脚本，就能自动生成 `schema` 文件以及 `db.json` 文件。访问 `http://localhost:3000/userInfo` 就能调用接口，注意这里的 **接口命名是根据swagger文件名来命名** 的。
+
+如果需要产生多层目录的接口，可以在 `swagger` 文件夹下面加入对应的文件夹，这样就能根据文件夹名称生成多级目录。
+
+例子：
+
+`/swagger/search.sg  -> http://localhost:[port]/search`
+
+`/swagger/path1/list.sg  -> http://localhost:[port]/path1/list`
+
+`/swagger/path1/path2/detail.sg  -> http://localhost:[port]/path1/path2/detail`
 
 ## 配置化
 
@@ -47,31 +57,95 @@ npx macondo-mock
 
 ### 配置项
 
-#### swagger 解析配置
+* baseOption
+* schemaOption
+* dbOption
+* serverOption
 
-| fileds | 类型 | 默认值 | 解释 |
+#### baseOption
+
+| `fileds` | 类型 | 默认值 | 解释 |
 | --- | --- | --- | --- |
+| `mockPath` | `string` | `./mock` | `mock` 文件生成的路径 |
 
-#### server 配置
+---
 
-| fields | 类型 | 默认值 | 解释 |
+#### schemaOption
+
+| `fields` | 类型 | 默认值 | 解释 |
 | --- | --- | --- | --- |
-| 端口 | number | 3000 | 本地服务的端口号 |
+| `force` | `boolean` | `false` | 出现和 `swagger` 文档中同名的 `schema` 文件时，是否强制生成 |
+| `global` | `Iglobal` | 见下 | 基础类型配置, 配置全局 `string` 类型 `mock` 等 |
+| `surmise` | `Array<Isurmise> & Isurmise` | 见下 | 自定义类型推断， 根据正则匹配字段名去微调 `mock` 类型 |
+
+Iglobal:
+
+```typescript
+export interface Iglobal {
+        number?: string
+        array?: string
+        string?: string
+        boolean?: string
+    }
+```
+
+默认值如下：
+
+```typescript
+const global = {
+            number: '@integer(1, 10000)',
+            string: '@csentence',
+            boolean: '@boolean',
+            array: '@integer(0, 10)'
+        }
+```
+
+Isurmise:
+
+```typescript
+export interface Isurmise {
+    test: string
+    mock?: string | {regexp: string}
+    data?: string
+    length?: number
+}
+```
+
+这里的 `test` 的内容是正则字符串，内部是通过 `new Regexp(test)` 返回的正则去匹配字段名。
+
+---
+
+#### dbOption
+
+| `fileds` | 类型 | 默认值 | 解释 |
+| --- | --- | --- | --- |
+| `force` | `boolean` | `true` | 是否每次启动脚本都去生成 `db.json` 文件 |
+
+#### serverOption
+
+| `fileds` | 类型 | 默认值 | 解释 |
+| --- | --- | --- | --- |
+| `port` | `number` | `3000` | 本地服务的端口号 |
+| `interfaceName` | `string` | `undefined` | 根据字符串匹配生成接口名 |
+
+`interfaceName` 的规则和 `webpack` 的 `output` 的 `name` 字段类似，举个例子，传入`[name].json`，那么生成的接口名字最后会替换掉 `[name]` 内容。
+
+---
 
 ## schema 字段解释
 
-schema文件夹下的文件是生成最后的 db.json 的规则：
+`schema` 文件夹下的文件是生成最后的 `db.json` 的规则：
 
 | 字段 | 解释 |
 | --- | --- |
-| type | 类型 |
-| comment | swagger文档中的注释 |
-| optional | 字段值是否可选 |
-| mock | 需要mock出来的数据类型, 如果type是array类型，mock返回值是数组长度 |
-| data | 如果指定了data值，就直接忽略mock项生成的值 |
-| generics | type是array的话，generics是数组子项的数据类型 |
+| `type` | 类型 |
+| `comment` | `swagger` 文档中的注释 |
+| `optional` | 字段值是否可选 |
+| `mock` | 需要 `mock` 出来的数据类型, 如果 `type` 是 `array` 类型，`mock` 返回值是数组长度 |
+| `data` | 如果指定了 `data` 值，就直接忽略 `mock` 项生成的值 |
+| `generics` | `type` 是 `array` 的话，`generics` 是数组子项的数据类型 |
 
-其中mock项还可以传入一个对象，传入正则(正则内容需要转义)生成假数据：
+其中 `mock` 项还可以传入一个对象，传入正则(正则内容需要转义)生成假数据：
 
 ```json
 {
