@@ -57,7 +57,7 @@ export class Resolver {
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, generics, mock, data} = Resolver.getType(type || '', name, option)
+                const {transformType, generics, mock, data, length} = Resolver.getType(type || '', name, option)
                 accu[name] = {
                     type: transformType,
                     comment,
@@ -69,6 +69,9 @@ export class Resolver {
                 if (data) {
                     accu[name].data = data
                 }
+                if (length) {
+                    accu[name].length = length
+                }
                 if (transformType === 'array') {
                     accu[name].generics = generics
                 }
@@ -77,8 +80,8 @@ export class Resolver {
         })
     }
 
-    static getType (type: string, name?: string, option?: option): {data?: any, transformType: string, generics?: string, mock?: string | {regexp: string} } {
-        let result: {data?: any, transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
+    static getType (type: string, name?: string, option?: option): {length?: number, data?: any, transformType: string, generics?: string, mock?: string | {regexp: string} } {
+        let result: {length?: number, data?: any, transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
         let hadHandleByConfig = false
         if (option && option.schemaOption!.surmise && name) {
             const surmises = Array.isArray(option.schemaOption!.surmise)
@@ -94,14 +97,18 @@ export class Resolver {
                     if (surmise.data) {
                         result.data = surmise.data
                     }
+                    if (surmise.length) {
+                        result.length = surmise.length
+                    }
                 }
             })
         }
-        if (!hadHandleByConfig && arrReg.test(type)) {
+        if (arrReg.test(type)) {
             return {
-                transformType: 'array',
                 generics: Resolver.resolveArray(type),
-                mock: '@integer(0, 10)'
+                mock: '@integer(0, 10)',
+                ...result,
+                transformType: 'array',
             }
         }
         switch (type) {

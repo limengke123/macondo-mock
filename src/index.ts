@@ -20,6 +20,7 @@ export interface Isurmise {
     test: string
     mock?: string | {regexp: string}
     data?: string
+    length?: number
 }
 
 export interface schemaOption {
