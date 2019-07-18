@@ -2,6 +2,7 @@ import * as cosmiconfig from 'cosmiconfig'
 import { option, optionTuple } from '../index'
 import {name} from '../../package.json'
 import {success} from '../util/commonUtil'
+import merge =  require('lodash.merge')
 
 const ERROR_PATH = '1. 加载 config： '
 
@@ -11,10 +12,7 @@ export function loadConfig (option: option = {}): Promise<optionTuple<undefined>
         .then(result => {
             let mergeOption: option = {}
             if (result) {
-                mergeOption = {
-                    ...option,
-                    ...result.config
-                }
+                mergeOption = merge(option, result.config)
             } else {
                 mergeOption = option
             }

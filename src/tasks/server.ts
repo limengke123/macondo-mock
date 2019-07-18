@@ -1,13 +1,10 @@
 import * as jsonServer from 'json-server'
-import {defaultOption, optionTuple} from '../index'
+import {optionTuple} from '../index'
 import { success } from '../util/commonUtil'
 
 export const startServer = ([option, [dataPath, schemaNames]]: optionTuple<[string, string[]]>) => {
     const { serverOption } = option
     let { port } = serverOption!
-    if (!port) {
-        port = defaultOption.serverOption!.port
-    }
     const app = jsonServer.create()
     const router = jsonServer.router(dataPath)
     const middleware = jsonServer.defaults()

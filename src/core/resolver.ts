@@ -106,7 +106,7 @@ export class Resolver {
         if (arrReg.test(type)) {
             return {
                 generics: Resolver.resolveArray(type),
-                mock: '@integer(0, 10)',
+                mock: option!.schemaOption!.global!.array,
                 ...result,
                 transformType: 'array',
             }
@@ -114,23 +114,23 @@ export class Resolver {
         switch (type) {
         case 'string':
             if (!hadHandleByConfig) {
-                result.mock = Resolver.handleStringMock(name)
+                result.mock = Resolver.handleStringMock(name, option)
             }
             break
         case 'integer':
             result.transformType = 'number'
             if (!hadHandleByConfig) {
-                result.mock = Resolver.handleNumberMock(name)
+                result.mock = Resolver.handleNumberMock(name, option!)
             }
             break
         case 'number':
             if (!hadHandleByConfig) {
-                result.mock = Resolver.handleNumberMock(name)
+                result.mock = Resolver.handleNumberMock(name, option!)
             }
             break
         case 'boolean':
             if (!hadHandleByConfig) {
-                result.mock = '@boolean'
+                result.mock = option!.schemaOption!.global!.boolean!
             }
             break
         default:
@@ -140,7 +140,7 @@ export class Resolver {
         return result
     }
 
-    static handleStringMock (name: string = ''): string | {regexp: string} {
+    static handleStringMock (name: string = '', option?: option): string | {regexp: string} {
         if (timeReg.test(name)) {
             return '@datetime'
         }
@@ -168,14 +168,14 @@ export class Resolver {
         if (userNameReg.test(name)) {
             return '@cname'
         }
-        return '@csentence'
+        return option!.schemaOption!.global!.string!
     }
 
-    static handleNumberMock (name: string = ''): string {
+    static handleNumberMock (name: string = '', option: option): string {
         if (idReg.test(name)) {
             return '@increment'
         }
-        return '@integer(1, 10000)'
+        return option!.schemaOption!.global!.number!
     }
 
     static resolveArray (str: string): string {

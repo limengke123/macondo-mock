@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import has = Reflect.has;
 
 const SPACE = '  '
 

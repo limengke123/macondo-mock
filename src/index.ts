@@ -25,9 +25,15 @@ export interface Isurmise {
 
 export interface schemaOption {
     // 是否强制生成 schema 文件
-    force?: boolean,
+    force?: boolean
     // 推断类型
     surmise?: Array<Isurmise> | Isurmise
+    global?: {
+        number?: string
+        array?: string
+        string?: string
+        boolean?: string
+    }
 }
 
 export interface dbOption {
@@ -44,7 +50,13 @@ export const defaultOption: option = {
         mockPath: './mock'
     },
     schemaOption: {
-        force: false
+        force: false,
+        global: {
+            number: '@integer(1, 10000)',
+            string: '@csentence',
+            boolean: '@boolean',
+            array: '@integer(0, 10)'
+        }
     },
     dbOption: {
         force: true
