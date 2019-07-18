@@ -1,3 +1,13 @@
+## [2.2.3](https://github.com/limengke123/macondo-mock/compare/v2.2.2...v2.2.3) (2019-07-18)
+
+
+### Features
+
+* 支持推断配置 ([3141a7e](https://github.com/limengke123/macondo-mock/commit/3141a7e))
+* 移除[@types](https://github.com/types)的依赖，转入开发依赖 ([15c5723](https://github.com/limengke123/macondo-mock/commit/15c5723))
+
+
+
 ## [2.2.2](https://github.com/limengke123/macondo-mock/compare/v2.2.1...v2.2.2) (2019-07-18)
 
 
