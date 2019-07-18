@@ -1,3 +1,12 @@
+## [2.2.2](https://github.com/limengke123/macondo-mock/compare/v2.2.1...v2.2.2) (2019-07-18)
+
+
+### Bug Fixes
+
+* 修复正则匹配未能匹配大写字母造成的错误 ([c2801ac](https://github.com/limengke123/macondo-mock/commit/c2801ac))
+
+
+
 ## [2.2.1](https://github.com/limengke123/macondo-mock/compare/v2.2.0...v2.2.1) (2019-07-17)
 
 
