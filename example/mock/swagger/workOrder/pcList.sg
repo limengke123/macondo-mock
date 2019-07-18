@@ -1,0 +1,41 @@
+Result«Page«WorkOrderView»» {
+success (boolean, optional),
+data (Page«WorkOrderView», optional),
+msg (string, optional),
+code (string, optional),
+traceId (string, optional)
+}
+Page«WorkOrderView» {
+currentIndex (integer, optional),
+pageSize (integer, optional),
+totalNumber (integer, optional),
+totalPage (integer, optional),
+nextIndex (integer, optional),
+preIndex (integer, optional),
+items (array[WorkOrderView], optional)
+}
+WorkOrderView {
+id (string, optional): 工单id (workOrder),
+code (string, optional): 工单号,
+workOrderNo (string, optional): 工单编号,
+businessType (string, optional): 业务类型,
+vinNumber (string, optional): vin 码,
+carModel (string, optional): 车型,
+carColor (string, optional): 车身颜色,
+carNo (string, optional): 车牌号,
+saleShop (string, optional): 销售店铺,
+businessCity (string, optional): 业务城市,
+workOrderType (string, optional): 工单规则,
+workOrderProblem (string, optional): 工单问题,
+creator (string, optional): 创建人,
+creatorId (string, optional): 创建人ID,
+processer (string, optional): 处理人,
+processerId (string, optional): 处理人ID,
+workOrderState (string, optional): 工单状态,
+timeOut (integer, optional): 是否超时,
+overtime (string, optional): 超时时长,
+spareCity (string, optional): 备用城市,
+expandField (string, optional): 拓展字段,
+createTime (string, optional): 创建时间,
+updateTime (string, optional): 更新时间
+}
