@@ -9,7 +9,11 @@
             "interfaceName": "[name].json"
         },
         "schemaOption": {
-            "force": false
+            "force": true,
+            "surmise": {
+                "test": "success",
+                "data": true
+            }
         },
         "dbOption": {
             "force": true
