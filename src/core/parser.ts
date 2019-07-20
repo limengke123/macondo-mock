@@ -3,9 +3,9 @@ import * as Mock from 'mockjs'
 
 const ERROR_PATH = '3. 生成db.json： '
 
-export function parse(root: myObject<Ischema>, source: myObject<myObject<Ischema>>): myObject<any>  {
+export function parse(root: Dictionary<Ischema>, source: Dictionary<Dictionary<Ischema>>): Dictionary<any>  {
     const keys = Object.keys(root)
-    let result: myObject<any> = {}
+    let result: Dictionary<any> = {}
     return keys.reduce((accu, currentKey) => {
         const schema = root[currentKey]
         const { type, generics, mock, data, length } = schema

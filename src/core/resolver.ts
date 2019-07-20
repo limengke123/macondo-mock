@@ -26,7 +26,7 @@ export interface Iline {
     comment?: string
 }
 
-export type Iresult = myObject<Iline[]>
+export type Iresult = Dictionary<Iline[]>
 
 export interface Ischema {
     type?: string,

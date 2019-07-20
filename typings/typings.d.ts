@@ -1,4 +1,4 @@
 declare module '*.json'
-interface myObject<V> {
+interface Dictionary<V> {
     [propName: string]: V
 }

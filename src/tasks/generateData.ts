@@ -50,7 +50,7 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>): Pro
                 }))
             })
             .then((dataList) => {
-                let data: myObject<myObject<any>> = {}
+                let data: Dictionary<Dictionary<any>> = {}
                 dataList.forEach(([result, name]) => {
                     const keyName = generateKeyName(name, option.serverOption!.interfaceName, '@')
                     data[keyName] = result
