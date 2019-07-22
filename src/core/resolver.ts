@@ -135,7 +135,7 @@ export class Resolver {
             break
         case 'object':
             if (!hadHandleByConfig) {
-                result.data = {}
+                result.data = option!.schemaOption!.global!.object
             }
             break
         default:

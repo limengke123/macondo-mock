@@ -32,7 +32,8 @@ export interface schemaOption {
         number?: string
         array?: string
         string?: string
-        boolean?: string
+        boolean?: string,
+        object: Dictionary<any>
     }
 }
 
@@ -55,7 +56,8 @@ export const defaultOption: option = {
             number: '@integer(1, 10000)',
             string: '@csentence',
             boolean: '@boolean',
-            array: '@integer(0, 10)'
+            array: '@integer(0, 10)',
+            object: {}
         }
     },
     dbOption: {
