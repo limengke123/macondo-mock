@@ -3,7 +3,16 @@ import * as Mock from 'mockjs'
 
 const ERROR_PATH = '3. 生成db.json： '
 
-export function parse(root: Dictionary<Ischema>, source: Dictionary<Dictionary<Ischema>>): Dictionary<any>  {
+export function parse(
+    root: Dictionary<Ischema>,
+    source: Dictionary<Dictionary<Ischema>>,
+    type?: string,
+    depth: number = 3,
+    linkNodes: string[] = [],
+): Dictionary<any>  {
+    if (!root) {
+        throw new Error(`生成数据失败，未能找到 ${type} 字段`)
+    }
     const keys = Object.keys(root)
     let result: Dictionary<any> = {}
     return keys.reduce((accu, currentKey) => {
@@ -20,11 +29,26 @@ export function parse(root: Dictionary<Ischema>, source: Dictionary<Dictionary<I
                 const arrayLength = length ? length : getMockData(mock)
                 if (source[generics]) {
                     // 其他类型的值
-                    accu[currentKey] = new Array(arrayLength).fill(0).map(() => parse(source[generics], source))
+                    const linkNode = linkNodes.filter(name => name === generics)[0]
+                    if (linkNode) {
+                        // 解决循环引用问题
+                        depth--
+                    } else {
+                        linkNodes.push(generics)
+                    }
+                    if (depth <= 0) {
+                        accu[currentKey] = []
+                        return accu
+                    }
+                    accu[currentKey] = new Array(arrayLength)
+                        .fill(0)
+                        .map(() => parse(source[generics], source, generics, depth, linkNodes))
                 } else {
                     // 基本类型的值，把数组的名字传进去，拿到匹配的mock
                     const { mock } = Resolver.getType(generics, currentKey)
-                    accu[currentKey] = new Array(arrayLength).fill(0).map(() => getMockData(mock))
+                    accu[currentKey] = new Array(arrayLength)
+                        .fill(0)
+                        .map(() => getMockData(mock))
                 }
             } else {
                 if (mock) {
@@ -32,7 +56,19 @@ export function parse(root: Dictionary<Ischema>, source: Dictionary<Dictionary<I
                     accu[currentKey] = getMockData(mock)
                 } else {
                     // 复合类型
-                    accu[currentKey] = parse(source[type || ''], source)
+                    const linkNode = linkNodes.filter(name => name === type)[0]
+                    if (linkNode) {
+                        // 解决循环引用
+                        depth--
+                    } else {
+                        linkNodes.push(type!)
+                    }
+                    if (depth <= 0) {
+                        // 解决循环引用问题
+                        accu[currentKey] = null
+                        return accu
+                    }
+                    accu[currentKey] = parse(source[type!], source, type, depth, linkNodes)
                 }
             }
         }
