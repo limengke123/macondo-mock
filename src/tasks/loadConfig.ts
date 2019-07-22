@@ -16,7 +16,7 @@ export function loadConfig (option: option = {}): Promise<undefined> {
             } else {
                 mergeOption = option
             }
-            setOption(merge<typeof mergeOption, IConfigOption>(mergeOption, getOption()))
+            setOption(merge<IConfigOption, typeof mergeOption>(getOption(), mergeOption))
             const configOption = getOption()
             if (!configOption.baseOption.mockPath) {
                 throw new Error(ERROR_PATH + '不存在 mockPath 字段')
