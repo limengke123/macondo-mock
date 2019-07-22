@@ -1,13 +1,15 @@
 import {Ischema, Resolver} from './resolver'
 import * as Mock from 'mockjs'
+import {getOption} from './option'
 
 const ERROR_PATH = '3. 生成db.json： '
+const option = getOption()
 
 export function parse(
     root: Dictionary<Ischema>,
     source: Dictionary<Dictionary<Ischema>>,
     type?: string,
-    depth: number = 3,
+    depth: number = option.schemaOption.recursiveDepth,
     linkNodes: string[] = [],
 ): Dictionary<any>  {
     if (!root) {
