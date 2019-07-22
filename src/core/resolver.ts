@@ -133,6 +133,11 @@ export class Resolver {
                 result.mock = option!.schemaOption!.global!.boolean!
             }
             break
+        case 'object':
+            if (!hadHandleByConfig) {
+                result.data = {}
+            }
+            break
         default:
             break
         }
