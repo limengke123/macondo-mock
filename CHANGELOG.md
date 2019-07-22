@@ -1,3 +1,13 @@
+# [2.3.0](https://github.com/limengke123/macondo-mock/compare/v2.2.3...v2.3.0) (2019-07-18)
+
+
+### Features
+
+* 引入lodash 解决配置深合并问题。增加基础类型的全局配置 ([407f917](https://github.com/limengke123/macondo-mock/commit/407f917))
+* 新增对 数组 类型的长度的配置设置 ([e9dde6c](https://github.com/limengke123/macondo-mock/commit/e9dde6c))
+
+
+
 ## [2.2.3](https://github.com/limengke123/macondo-mock/compare/v2.2.2...v2.2.3) (2019-07-18)
 
 
