@@ -1,13 +1,15 @@
 import * as path from 'path'
 import { generateSingleSchema } from '../core/generateSingleSchema'
-import { optionTuple } from '../index'
 import {diff, success} from '../util/commonUtil'
 import {extractRelativePath} from '../util/fsUtil'
+import {getOption} from '../core/option'
 
 const ERROR_PATH = '2. 生成 schema.json： '
 
+const option = getOption()
 
-export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTuple<[string[], string[]]>): Promise<optionTuple<string[]>> {
+
+export function generateSchema ([swaggerFiles, schemaFiles]:[string[], string[]]): Promise<string[]> {
     const mockDir = option.baseOption!.mockPath!
     const force = option.schemaOption!.force
     return Promise.resolve()
@@ -31,12 +33,12 @@ export function generateSchema ([option, [swaggerFiles, schemaFiles]]: optionTup
                 const fileName = path.parse(swaggerFile).name
                 const relativePath = path.parse(extractRelativePath(swaggerFile, '/swagger')).dir
                 const absoluteSchemaPath = path.join(process.cwd(), mockDir, './schema', relativePath)
-                return generateSingleSchema(option, swaggerFile, absoluteSchemaPath, fileName)
+                return generateSingleSchema(swaggerFile, absoluteSchemaPath, fileName)
             })
             return Promise.all(batchGenerateSchemaPromise)
         })
         .then(schemaFilePaths => {
             // 合并去重一下读取的schemaFiles和生成的schemaFiles
-            return [option, Array.from(new Set<string>([...schemaFilePaths, ...schemaFiles]))]
+            return Array.from(new Set<string>([...schemaFilePaths, ...schemaFiles]))
         })
 }

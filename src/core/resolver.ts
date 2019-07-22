@@ -1,5 +1,5 @@
 import {Result} from 'range-parser'
-import {option} from '../index'
+import {getOption} from './option'
 
 // swagger文档的解析正则
 const leftBrace: RegExp = /\s*(.*)\s*{\s*/g
@@ -18,6 +18,8 @@ const phoneReg: RegExp = /\w*[pP]hone(?:Number)?/
 
 const RESULT = 'Result'
 const DATA = 'data'
+
+const option = getOption()
 
 export interface Iline {
     name: string
@@ -45,7 +47,7 @@ export class Resolver {
         this.source = source
     }
 
-    generate (option: option): never | void {
+    generate (): never | void {
         if (!this.source[RESULT]) {
             throw new Error(`不存在${RESULT}字段，无法解析`)
         }
@@ -57,7 +59,7 @@ export class Resolver {
         keys.forEach(key => {
             this.schemaJson[key] = this.source[key].reduce((accu: {[propName: string]: Ischema}, current: Iline) => {
                 const {name, comment, optional, type} = current
-                const {transformType, generics, mock, data, length} = Resolver.getType(type || '', name, option)
+                const {transformType, generics, mock, data, length} = Resolver.getType(type || '', name)
                 accu[name] = {
                     type: transformType,
                     comment,
@@ -80,11 +82,11 @@ export class Resolver {
         })
     }
 
-    static getType (type: string, name?: string, option?: option): {length?: number, data?: any, transformType: string, generics?: string, mock?: string | {regexp: string} } {
+    static getType (type: string, name?: string): {length?: number, data?: any, transformType: string, generics?: string, mock?: string | {regexp: string} } {
         let result: {length?: number, data?: any, transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
         let hadHandleByConfig = false
         if (option && option.schemaOption!.surmise && name) {
-            const surmises = Array.isArray(option.schemaOption!.surmise)
+            const surmises = Array.isArray(option.schemaOption.surmise)
                 ? option.schemaOption!.surmise
                 : [option.schemaOption!.surmise]
             surmises.forEach(surmise => {
@@ -114,28 +116,28 @@ export class Resolver {
         switch (type) {
         case 'string':
             if (!hadHandleByConfig) {
-                result.mock = Resolver.handleStringMock(name, option)
+                result.mock = Resolver.handleStringMock(name)
             }
             break
         case 'integer':
             result.transformType = 'number'
             if (!hadHandleByConfig) {
-                result.mock = Resolver.handleNumberMock(name, option!)
+                result.mock = Resolver.handleNumberMock(name)
             }
             break
         case 'number':
             if (!hadHandleByConfig) {
-                result.mock = Resolver.handleNumberMock(name, option!)
+                result.mock = Resolver.handleNumberMock(name)
             }
             break
         case 'boolean':
             if (!hadHandleByConfig) {
-                result.mock = option!.schemaOption!.global!.boolean!
+                result.mock = option.schemaOption.global.boolean
             }
             break
         case 'object':
             if (!hadHandleByConfig) {
-                result.data = option!.schemaOption!.global!.object
+                result.data = option.schemaOption.global.object
             }
             break
         default:
@@ -145,7 +147,7 @@ export class Resolver {
         return result
     }
 
-    static handleStringMock (name: string = '', option?: option): string | {regexp: string} {
+    static handleStringMock (name: string = ''): string | {regexp: string} {
         if (timeReg.test(name)) {
             return '@datetime'
         }
@@ -173,14 +175,14 @@ export class Resolver {
         if (userNameReg.test(name)) {
             return '@cname'
         }
-        return option!.schemaOption!.global!.string!
+        return option.schemaOption.global.string || ''
     }
 
-    static handleNumberMock (name: string = '', option: option): string {
+    static handleNumberMock (name: string = ''): string {
         if (idReg.test(name)) {
             return '@increment'
         }
-        return option!.schemaOption!.global!.number!
+        return option.schemaOption.global.number || ''
     }
 
     static resolveArray (str: string): string {
@@ -258,10 +260,10 @@ export class Receiver {
         return lineResult
     }
 
-    getSchemaJson (option: option): {[propName: string]: Ischema} {
+    getSchemaJson (): {[propName: string]: Ischema} {
         const resolver = new Resolver(this.result)
         try {
-            resolver.generate(option)
+            resolver.generate()
         } catch (e) {
             console.log(e.message)
             process.exit(1)

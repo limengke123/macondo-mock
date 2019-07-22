@@ -1,11 +1,13 @@
 import * as path from 'path'
 import {writeFile, accessFile, access, extractRelativePath} from '../util/fsUtil'
-import {optionTuple} from '../index'
 import { success } from '../util/commonUtil'
 import { generateSingleData } from '../core/generateSingleData'
+import {getOption} from '../core/option'
 
 const ERROR_PATH = '3. 生成db.json： '
 const DB_JSON_FILE = './db.json'
+
+const option = getOption()
 
 // /search/rule/hhh.json -> search@rule@hhh
 function generateKeyName(schemaPath: string, interfaceName?:string, separator: string = '@'): string {
@@ -22,7 +24,7 @@ function generateKeyName(schemaPath: string, interfaceName?:string, separator: s
     return pathName.concat(fileName).join(separator)
 }
 
-export function generateData ([option, schemaPaths]: optionTuple<string[]>): Promise<optionTuple<[string, string[]]>> {
+export function generateData (schemaPaths: string[]): Promise<[string, string[]]> {
     const keyNames = schemaPaths.map(schemaPath => {
         return generateKeyName(extractRelativePath(schemaPath, '/schema'), option.serverOption!.interfaceName, '/')
     })
@@ -35,14 +37,14 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>): Pro
                     return _generateData()
                 } else {
                     success(`${ERROR_PATH} 跳过生成 db.json 文件步骤`)
-                    return [option, [dataPath, keyNames]]
+                    return [dataPath, keyNames]
                 }
             })
     } else {
         return _generateData()
     }
     // 生成data数据
-    function _generateData(): Promise<optionTuple<[string, string[]]>> {
+    function _generateData(): Promise<[string, string[]]> {
         return Promise.resolve()
             .then(() => {
                 return Promise.all(schemaPaths.map(schemaPath => {
@@ -60,10 +62,7 @@ export function generateData ([option, schemaPaths]: optionTuple<string[]>): Pro
             })
             .then(([dataPath]) => {
                 success(`${ERROR_PATH}成功生成数据文件：${dataPath}`,)
-                return [
-                    option,
-                    [dataPath, keyNames]
-                ]
+                return [dataPath, keyNames]
             })
     }
 }

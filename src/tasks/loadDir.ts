@@ -1,14 +1,16 @@
 import * as path from 'path'
-import {optionTuple} from '../index'
-import {listDir, mkdir, readdir} from '../util/fsUtil'
+import {listDir, mkdir} from '../util/fsUtil'
+import {getOption} from '../core/option'
 
 const SWAGGER_PATH = './swagger'
 const SCHEMA_PATH = './schema'
 
-export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[string[], string[]]>> {
+const option = getOption()
+
+export function loadDir(): Promise<[string[], string[]]> {
     const { baseOption } = option
-    const { mockPath } = baseOption!
-    const mockRealPath = path.join(process.cwd(), mockPath!)
+    const { mockPath } = baseOption
+    const mockRealPath = path.join(process.cwd(), mockPath)
     const swaggerDirPath = path.resolve(mockRealPath, SWAGGER_PATH)
     const schemaDirPath = path.resolve(mockRealPath, SCHEMA_PATH)
     return Promise.resolve()
@@ -34,11 +36,8 @@ export function loadDir([option]: optionTuple<undefined>): Promise<optionTuple<[
                 throw new Error(`${schemaDirPath}目录下没有schema文件，并且${swaggerDirPath}目录下也没有 swagger 文件，尝试在${swaggerDirPath}目录下添加swagger文件之后重试`)
             } else {
                 return [
-                    option,
-                    [
-                        swaggerFiles,
-                        schemaFiles
-                    ]
+                    swaggerFiles,
+                    schemaFiles
                 ]
             }
         })

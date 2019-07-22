@@ -4,13 +4,15 @@ import * as fs from 'fs'
 import {access, accessFile, writeFile} from '../util/fsUtil'
 import {success} from '../util/commonUtil'
 import {Receiver} from './resolver'
-import {option} from '../index'
+import {getOption} from './option'
 
 const ERROR_PATH = '2. 生成 schema.json： '
 const JSON_EXT = '.json'
 
+const option = getOption()
+
 // 根据swaggerPath，去生成 schema 文件
-export const generateSingleSchema = function (option: option, swaggerPath: string, targetPath: string, targetFileName: string, force: boolean = true) {
+export const generateSingleSchema = function (swaggerPath: string, targetPath: string, targetFileName: string, force: boolean = true) {
     const targetFilePath = path.resolve(targetPath, targetFileName + JSON_EXT)
     return accessFile(targetFilePath)
         .then(([exists]: access) => {
@@ -33,7 +35,7 @@ export const generateSingleSchema = function (option: option, swaggerPath: strin
                     }
                 })
                 rl.on('close', () => {
-                    const schemaJson = receiver.getSchemaJson(option)
+                    const schemaJson = receiver.getSchemaJson()
                     writeFile(targetFilePath, JSON.stringify(schemaJson))
                         .then(() => {
                             success(`${ERROR_PATH}成功创建 schema 文件： ${targetFilePath}`,)

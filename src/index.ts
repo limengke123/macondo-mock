@@ -4,74 +4,10 @@ import { generateSchema } from './tasks/generateSchema'
 import { generateData } from './tasks/generateData'
 import { startServer } from './tasks/server'
 import { error } from './util/commonUtil'
-
-export interface option {
-    baseOption?: baseOption
-    schemaOption?: schemaOption
-    dbOption?: dbOption
-    serverOption?: serverOption
-}
-
-export interface baseOption {
-    mockPath?: string
-}
-
-export interface Isurmise {
-    test: string
-    mock?: string | {regexp: string}
-    data?: string
-    length?: number
-}
-
-export interface schemaOption {
-    // 是否强制生成 schema 文件
-    force?: boolean
-    // 推断类型
-    surmise?: Array<Isurmise> | Isurmise
-    global?: {
-        number?: string
-        array?: string
-        string?: string
-        boolean?: string,
-        object: Dictionary<any>
-    }
-}
-
-export interface dbOption {
-    force?: boolean
-}
-
-export interface serverOption {
-    port?: number,
-    interfaceName?: string
-}
-
-export const defaultOption: option = {
-    baseOption: {
-        mockPath: './mock'
-    },
-    schemaOption: {
-        force: false,
-        global: {
-            number: '@integer(1, 10000)',
-            string: '@csentence',
-            boolean: '@boolean',
-            array: '@integer(0, 10)',
-            object: {}
-        }
-    },
-    dbOption: {
-        force: true
-    },
-    serverOption: {
-        port: 3000
-    }
-}
-
-export type optionTuple<T> = [option, T]
+import {option} from './core/option'
 
 const mock = function (option: option = {}): void {
-    Promise.resolve({...defaultOption, ...option})
+    Promise.resolve(option)
         // 1. 加载本地的「config」文件
         .then(loadConfig)
         // 2. 尝试生成本地「mock」文件夹，顺便读取「mock」文件夹下的 「schema」「swagger」文件夹下的文件内容
