@@ -1,0 +1,12 @@
+Result«List«AreaView»» {
+success (boolean, optional),
+data (array[AreaView], optional),
+msg (string, optional),
+code (string, optional),
+traceId (string, optional)
+}
+AreaView {
+code (string, optional): 省/市代码,
+name (string, optional): 省/市名称,
+sons (array[AreaView], optional): 下级区域
+}

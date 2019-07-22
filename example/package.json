@@ -11,7 +11,8 @@
         "schemaOption": {
             "force": true,
             "global": {
-                "string": "@sentence"
+                "string": "@sentence",
+                "array": "@integer(4, 5)"
             },
             "surmise": [
                 {

@@ -1,0 +1,52 @@
+{
+    "Result": {
+        "success": {
+            "type": "boolean",
+            "comment": ",",
+            "optional": true,
+            "data": true
+        },
+        "data": {
+            "type": "AreaView",
+            "comment": ",",
+            "optional": true
+        },
+        "msg": {
+            "type": "string",
+            "comment": ",",
+            "optional": true,
+            "mock": "@sentence"
+        },
+        "code": {
+            "type": "string",
+            "comment": ",",
+            "optional": true,
+            "mock": "@string(\"lower\", 8)"
+        },
+        "traceId": {
+            "type": "string",
+            "comment": "",
+            "optional": true,
+            "mock": "@increment"
+        }
+    },
+    "AreaView": {
+        "code": {
+            "type": "string",
+            "comment": " 省/市代码,",
+            "optional": true,
+            "mock": "@string(\"lower\", 8)"
+        },
+        "name": {
+            "type": "string",
+            "comment": " 省/市名称,",
+            "optional": true,
+            "mock": "@cname"
+        },
+        "sons": {
+            "type": "AreaView",
+            "comment": " 下级区域",
+            "optional": true
+        }
+    }
+}
