@@ -9,6 +9,7 @@
             "interfaceName": "[name].json"
         },
         "schemaOption": {
+            "recursiveDepth": 1,
             "force": true,
             "global": {
                 "string": "@sentence",
