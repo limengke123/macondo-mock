@@ -1,0 +1,7 @@
+Result«string» {
+success (boolean, optional),
+data (string, optional),
+msg (string, optional),
+code (string, optional),
+traceId (string, optional)
+}
