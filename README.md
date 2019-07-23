@@ -77,6 +77,7 @@ npx macondo-mock
 | `force` | `boolean` | `false` | 出现和 `swagger` 文档中同名的 `schema` 文件时，是否强制生成 |
 | `global` | `Iglobal` | 见下 | 基础类型配置, 配置全局 `string` 类型 `mock` 等 |
 | `surmise` | `Array<Isurmise> & Isurmise` | 见下 | 自定义类型推断， 根据正则匹配字段名去微调 `mock` 类型 |
+| `recursiveDepth` | `number` | 3 | 如果结果存在循环体，自递归层数 |
 
 Iglobal:
 

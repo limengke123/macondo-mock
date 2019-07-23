@@ -5,7 +5,8 @@
     "main": "index.js",
     "files": [
         "lib/",
-        "bin/"
+        "bin/",
+        "typings/typings.d.ts"
     ],
     "bin": {
         "macondo-mock": "./bin/index.js"
