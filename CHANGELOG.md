@@ -1,3 +1,21 @@
+# [2.4.0](https://github.com/limengke123/macondo-mock/compare/v2.3.0...v2.4.0) (2019-07-22)
+
+
+### Bug Fixes
+
+* 修复config深拷贝失败的问题 ([de9575c](https://github.com/limengke123/macondo-mock/commit/de9575c))
+* 解决循环引用体的问题，默认自递归三层结束循环 ([2c95a99](https://github.com/limengke123/macondo-mock/commit/2c95a99))
+
+
+### Features
+
+* 内部结构调整，增加了全局option调用 ([fe3b254](https://github.com/limengke123/macondo-mock/commit/fe3b254))
+* 对 「object」增加默认值可配置 ([1b318ef](https://github.com/limengke123/macondo-mock/commit/1b318ef))
+* 对 「object」类型的默认值设置为 {} ([962aea3](https://github.com/limengke123/macondo-mock/commit/962aea3))
+* 自递归层级接受配置参数 ([c3c1afd](https://github.com/limengke123/macondo-mock/commit/c3c1afd))
+
+
+
 # [2.3.0](https://github.com/limengke123/macondo-mock/compare/v2.2.3...v2.3.0) (2019-07-18)
 
 
