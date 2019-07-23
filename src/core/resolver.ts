@@ -84,15 +84,43 @@ export class Resolver {
 
     static getType (type: string, name?: string): {length?: number, data?: any, transformType: string, generics?: string, mock?: string | {regexp: string} } {
         let result: {length?: number, data?: any, transformType:string, generics?: string, mock?: string | {regexp: string}} = {transformType: type}
-        let hadHandleByConfig = false
+
+        if (arrReg.test(type)) {
+            return {
+                generics: Resolver.resolveArray(type),
+                mock: option!.schemaOption!.global!.array,
+                ...result,
+                transformType: 'array',
+            }
+        }
+        switch (type) {
+        case 'string':
+            result.mock = Resolver.handleStringMock(name)
+            break
+        case 'integer':
+            result.transformType = 'number'
+            result.mock = Resolver.handleNumberMock(name)
+            break
+        case 'number':
+            result.mock = Resolver.handleNumberMock(name)
+            break
+        case 'boolean':
+            result.mock = option.schemaOption.global.boolean
+            break
+        case 'object':
+            result.data = option.schemaOption.global.object
+            break
+        default:
+            break
+        }
         if (option && option.schemaOption!.surmise && name) {
+            // 注入配置的类型推断
             const surmises = Array.isArray(option.schemaOption.surmise)
                 ? option.schemaOption!.surmise
                 : [option.schemaOption!.surmise]
             surmises.forEach(surmise => {
                 const regexp = new RegExp(surmise.test)
                 if (regexp.test(name)) {
-                    hadHandleByConfig = true
                     if (surmise.mock) {
                         result.mock = surmise.mock
                     }
@@ -104,44 +132,6 @@ export class Resolver {
                     }
                 }
             })
-        }
-        if (arrReg.test(type)) {
-            return {
-                generics: Resolver.resolveArray(type),
-                mock: option!.schemaOption!.global!.array,
-                ...result,
-                transformType: 'array',
-            }
-        }
-        switch (type) {
-        case 'string':
-            if (!hadHandleByConfig) {
-                result.mock = Resolver.handleStringMock(name)
-            }
-            break
-        case 'integer':
-            result.transformType = 'number'
-            if (!hadHandleByConfig) {
-                result.mock = Resolver.handleNumberMock(name)
-            }
-            break
-        case 'number':
-            if (!hadHandleByConfig) {
-                result.mock = Resolver.handleNumberMock(name)
-            }
-            break
-        case 'boolean':
-            if (!hadHandleByConfig) {
-                result.mock = option.schemaOption.global.boolean
-            }
-            break
-        case 'object':
-            if (!hadHandleByConfig) {
-                result.data = option.schemaOption.global.object
-            }
-            break
-        default:
-            break
         }
 
         return result
